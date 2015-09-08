@@ -1,0 +1,3 @@
+[submodule "firos"]
+	path = firos
+	url = https://github.com/Ikergune/firos.git
