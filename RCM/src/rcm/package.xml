@@ -1,0 +1,33 @@
+<package>
+    <name>rcm</name>
+    <version>1.0.0</version>
+    <description>
+        rcm_driver is the middleware between rcm platform node and ros.
+    </description>
+    <maintainer email="fabio.dibenedetto@consoft.it">Fabio Giuseppe Di Benedetto</maintainer>
+    <license>BSD</license>
+
+    <url>http://fiware.org/wiki/rcm_driver</url>
+    <author>Fabio Giuseppe Di Benedetto</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <!--
+    <build_depend>message_generation</build_depend>
+    <build_depend>std_msgs</build_depend>
+    -->
+    <build_depend>robotics_msgs</build_depend>
+
+    <!-- provide message generation to downstream packages -->
+    <!--
+    <run_depend>message_generation</run_depend>
+    -->
+    <run_depend>message_runtime</run_depend>
+    <run_depend>robotics_msgs</run_depend>
+
+    <!--
+    <export>
+    <architecture_independent/>
+    </export>
+    -->
+</package>

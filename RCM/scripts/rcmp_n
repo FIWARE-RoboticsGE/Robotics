@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+__author__ = "Fabio Giuseppe Di Benedetto"
+
+import os.path
+import logging
+import logging.handlers
+from rcm_platform.rcmp_node import RCMP_LOGGER_NAME, log_folder, RCMPlatformNode
+
+logger = logging.getLogger(RCMP_LOGGER_NAME)
+# logger.setLevel(logging.INFO)
+# for now
+logger.setLevel(logging.DEBUG)
+# you need to ensure that the /var/log/rcm-platform folder exists
+# and the user running the daemon process has write permissions
+logfile_path = os.path.join(log_folder, "rcmpd.log")
+# around 2 MByte rotating files (10240000 or 10000000 bytes)
+handler = logging.handlers.RotatingFileHandler(logfile_path, maxBytes=(2*1000*1024), backupCount=5)
+# formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter("%(asctime)s - %(module)s.%(funcName)s() - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+rcmp_node = RCMPlatformNode()
+rcmp_node.run()
