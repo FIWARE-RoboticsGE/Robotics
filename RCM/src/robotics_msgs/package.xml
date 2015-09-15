@@ -6,7 +6,7 @@
         between rcm_driver and FIROS.
     </description>
     <maintainer email="anybody@fiware.org">Whoever wants</maintainer>
-    <license>BSD</license>
+    <license>MIT</license>
 
     <url>http://fiware.org/wiki/robotics_msgs</url>
     <author>Fabio Giuseppe Di Benedetto</author>
@@ -16,7 +16,6 @@
     <build_depend>message_generation</build_depend>
     <build_depend>std_msgs</build_depend>
 
-    <!-- provide message generation to downstream packages -->
     <run_depend>message_generation</run_depend>
     <run_depend>message_runtime</run_depend>
     <run_depend>std_msgs</run_depend>
