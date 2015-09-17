@@ -11,7 +11,7 @@ from rcmp_command import RCMPlatformNode, RCMPCommandAgent, RCMPMessage
 
 
 class SLogicInstance(RCMPCommandAgent):
-    SLG_NAME_KEY = "name"
+    SLG_NAME_KEY = "slg_name"
     SLG_SS_SIDE_KEY = "ss_side"
     SLG_SN_SIDE_KEY = "sn_side"
     SLG_SL_SIDE_KEY = "sl_side"
