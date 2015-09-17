@@ -98,11 +98,13 @@ class RCMDriver:
             # we notify the entity deletion so that the node can go on in the clean up
             msg_dict = {self.COMMAND_KEY: self.ENTITY_REMOVED, self.R_NAME_KEY: self.robot_name}
         request = json.dumps(msg_dict)
+        rospy.loginfo("-- TMP -- firos response about entity: %s" % request)
         self._entity_status.put_nowait(request)
 
     def firos_info_handler(self, request):
         if request.instance_name != self.robot_name:
             rospy.loginfo("firos changed the robot name from %s to %s" % (self.robot_name, request.instance_name))
+        rospy.loginfo("-- TMP -- firos asked info about '%s'" % request.instance_name)
         cmd = ['rostopic', 'list', '-v']
         tl_p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         tl_p_out, tl_p_err = tl_p.communicate()
@@ -129,6 +131,7 @@ class RCMDriver:
                                        "msg": m.group(self.RT_MSG_KEY),
                                        "type": "subscriber"})
         result = json.dumps(topics)
+        rospy.loginfo("-- TMP -- rcm_driver provide to firos the response: %s" % result)
         return FIROS_InfoResponse(result)
 
     def run(self):

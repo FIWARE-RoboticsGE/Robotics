@@ -224,6 +224,9 @@ class RCMPRoboticsDataManager:
         self.insert_service_logic("base", RCMPlatformNode.S_TYPE)
         # it creates a service space server side and no nodes or launchers
         self.insert_service_logic("fiware_demo1", RCMPlatformNode.S_TYPE)
+        # it creates a service space and fiware nodes (rcmdriver, firos) on
+        # server side and nothing on robot side
+        self.insert_service_logic("fiware_base", RCMPlatformNode.S_TYPE)
         # it creates a service space and fiware nodes (with rcmdriver) on
         # server side and turtlebot launchers on robot side
         self.insert_service_logic("fiware_demo2", RCMPlatformNode.S_TYPE)
@@ -236,6 +239,9 @@ class RCMPRoboticsDataManager:
         self.insert_service_item("firos", "core.py", ServiceRCMPCommandAgent.SLI_N_TYPE)
         self.insert_service_item("rcm", "rcmdriver.py", ServiceRCMPCommandAgent.SLI_N_TYPE)
         self.insert_service_item("webrtc", "webRTC_master.py", ServiceRCMPCommandAgent.SLI_N_TYPE)
+        #
+        self.insert_service_logic_item("fiware_base", "rcm", "rcmdriver.py", RCMPlatformNode.S_TYPE, "", "")
+        self.insert_service_logic_item("fiware_base", "firos", "core.py", RCMPlatformNode.S_TYPE, "", "")
         #
         self.insert_service_logic_item("fiware_demo2", "turtlebot_bringup", "minimal.launch",
                                        RCMPlatformNode.R_TYPE, "", "")

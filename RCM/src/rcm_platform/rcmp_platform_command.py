@@ -350,9 +350,9 @@ class PNodeInstance(RCMPCommandAgent):
         # Take PI_NAME_KEY from params and get all the service spaces running on that RCM
         # platform node instance. Add I_ADDRESS_KEY in params with the ip address of this
         # instance
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if self.PI_NAME_KEY not in params or (self.PI_NAME_KEY in params and not params[self.PI_NAME_KEY]):
             raise SyntaxError("%s is missing in the request" % self.PI_NAME_KEY)
-        from rcmp_robotics_data import execute_int_robotics_data_query
         return execute_int_robotics_data_query(self.get_ss, params,
                                                "Unable to provide the list of service spaces "
                                                "for the %s named '%s'" % (self._who, params[self.PI_NAME_KEY]))

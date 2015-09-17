@@ -55,9 +55,10 @@ In addition to the instruction provided by the products you
 have to take care of a couple of things regarding RCM:
 
 	- rcm master internally runs a web server to expose the
-	  RDAPI. This web server is forced to use the network
-	  interface called 'eth0' so make sure that this is the
-	  main network interface accessible by the user.
+	  `RDAPI <http://docs.rdapi.apiary.io/>`_.
+	  This web server is forced to use the network interface
+	  called 'eth0' so make sure that this is the main network
+	  interface accessible by the user.
 
 	- rcm instances, as agents of the platform, need to deal
 	  with the other agents in the platform and to do so they
@@ -74,11 +75,13 @@ Installation
 ------------
 
 The installation package is provided in a compressed file
-named rcm_platform.zip with the following content:
+named rcm_platform_master.zip for the rcm master or
+rcm_platform_robot.zip for the rcm robot. Both have the
+same structure:
 
 ::
 
-	rcm_platform_pkg/
+	rcm_platform_master/
 		rcm_platform/
 			__init__.py
 			rcmp_command.py
@@ -100,18 +103,43 @@ named rcm_platform.zip with the following content:
 		rcmpd
 		rcmp_n
 
-unzip the file and launch install.sh in rcm_platform_pkg
-folder:
+The only visible difference between the contents of the packages
+is the name of the root folder into the compress file and two missing
+python modules in the rcm_platform folder of the rcm robot package:
 
 ::
 
-	~/rcm_platform_pkg$ ./install.sh
+	rcm_platform_robot/
+		rcm_platform/
+			__init__.py
+			rcmp_command.py
+			rcmp_event.py
+			rcmp_inter_communication.py
+			rcmp_ms.py
+			rcmp_node.py
+			rcmp_platform_command.py
+			rcmp_service_command.py
+			rcmp_wd.py
+		ros/
+			rosconsole.config
+		install.sh
+		sub_inst.sh
+		uninstall.sh
+		sub_uninst.sh
+		rcmpd
+		rcmp_n
+
+unzip the file, enter into the root folder and launch install.sh:
+
+::
+
+	~/rcm_platform_master$ ./install.sh
 
 The procedure installs the package dependences and places all the
 needed files in the right places: some of these steps require
 the administration permission so after the first steps it will
 be asked you the sudo password.
-The installer provide a step by step configuration process
+The installer provides a step by step configuration process
 and can be used as a wizard to perform changes in the
 configuration files. At the end of the process it will ask
 if it has to start the rcm daemon. You can also change
@@ -144,11 +172,16 @@ using apt-get tool during the installation:
 
 	- ``python-twisted`` to implement the web service
 
+python-twisted is used as web server to provide the web services
+needed to implement the `RDAPI <http://docs.rdapi.apiary.io/>`_
+available only through the rcm master so this package will be
+installed and used only in that rcm instance.
+
 Installation files
 ==================
 
 As said before, the installer places all the needed files in the
-installation package in the right place and creates all the needed
+installation package in the right places and creates all the needed
 folders; in this section we will list all the files and folders
 arranged by the installation process and will give a brief
 explanation for each of them.
@@ -181,6 +214,10 @@ explanation for each of them.
 		rcmp_service_command.py
 		rcmp_wd.py
 
+	  In case of rcm robot rcmp_ext_connector.py and
+	  rcmp_robotics_data.py are not available because they are
+	  used only by rcm master
+
 	- ``/opt/rcm-platform/`` this folder is created in the
 	  opt folder and is the base directory for the application;
 	  it contains the configuration files, the robotics data,
@@ -205,12 +242,10 @@ brackets (used in case the user presses only Enter key):
 ::
 
 	~/rcm_platform_pkg$ ./install
-	Is this RCM platform node the master ([Y]es/no)?
+	The workspace rcmp_ws already exists: do you wanna replace it ([Y]es/no)?
 
 As said before we have two kind of agents in the platform so
-this question provide the selection between an rcm master
-agent that should be installed on the master and an rcm robot
-agent that should be installed on the robots.
+different questions are proposed in the two cases.
 Rcm master doesn't have the standard configuration file
 init.cfg but uses an hidden file .init.cfg that looks the
 same but with only the list of the ports opened for inbound
@@ -230,7 +265,8 @@ important to remember that the ip address of the master must be
 the one in the VPN (network interface 'tun0' is used by the
 instances to communicate each other) and the name of the robot
 must match the one provided during the provisioning phase (once
-the rcm master is installed and running exposes RDAPI: to add
+the rcm master is installed and running exposes
+`RDAPI <http://docs.rdapi.apiary.io/>`_: to add
 robots to the platform you have to call the provisioning web
 service and provide the name there will be used for the robot).
 
@@ -313,8 +349,8 @@ your environment.
 Uninstallation
 --------------
 
-The installation package rcm_platform.zip provides the tool
-for uninstalling RCM. Enter into rcm_platform_pkg folder
+The installation package rcm_platform_*.zip provides the tool
+for uninstalling RCM. Enter into rcm_platform_* folder
 extracted from the installation package and launch
 uninstall.sh:
 

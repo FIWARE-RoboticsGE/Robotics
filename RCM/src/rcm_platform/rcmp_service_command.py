@@ -8,10 +8,8 @@ import copy
 
 from rcmp_node import signal, threading
 from rcmp_command import RCMPlatformNode, RCMPCommandAgent, RCMPMessage
-from rcmp_robotics_data import execute_robotics_data_query, execute_int_robotics_data_query
 
 
-# TODO ---------------------------------------------------------------------------------------------------------
 class SLogicInstance(RCMPCommandAgent):
     SLG_NAME_KEY = "name"
     SLG_SS_SIDE_KEY = "ss_side"
@@ -60,6 +58,7 @@ class SLogicInstance(RCMPCommandAgent):
     # --- MANUAL PROVISIONING ---
 
     def target_on_manual_provisioning(self, params):
+        from rcmp_robotics_data import execute_robotics_data_query
         return execute_robotics_data_query(self.create_slg, params,
                                            err_reason="The provisioning of %s with name %s failed" %
                                                       (self._who, params[self.SLG_NAME_KEY]))
@@ -174,6 +173,7 @@ class SLogicInstance(RCMPCommandAgent):
     # --- ROLLBACK PROVISIONING ---
 
     def target_on_rollback_provisioning(self, params):
+        from rcmp_robotics_data import execute_robotics_data_query
         return execute_robotics_data_query(self.delete_slg, params,
                                            err_reason="The provisioning rollback of %s with name '%s' failed" %
                                                       (self._who, params[self.SLG_NAME_KEY]))
@@ -210,6 +210,7 @@ class SLogicInstance(RCMPCommandAgent):
     # --- READ LIST ---
 
     def target_on_read_list(self, params):
+        from rcmp_robotics_data import execute_robotics_data_query
         return execute_robotics_data_query(self.get_slg_list, params,
                                            err_reason="The read of the list of %ss failed" % self._who)
 
@@ -227,6 +228,7 @@ class SLogicInstance(RCMPCommandAgent):
     # --- READ ---
 
     def target_on_read(self, params):
+        from rcmp_robotics_data import execute_robotics_data_query
         return execute_robotics_data_query(self.get_slg_info, params,
                                            err_reason="The read of the %s with name '%s' failed" %
                                                       (self._who, params[self.SLG_NAME_KEY]))
@@ -281,7 +283,6 @@ class SLogicInstance(RCMPCommandAgent):
             reason = "The %s with name '%s' doesn't exist" % (self._who, params[self.SLG_NAME_KEY])
             result.create_error_response(reason)
         return result
-# TODO ---------------------------------------------------------------------------------------------------------
 
 
 class ServiceRCMPCommandAgent(RCMPCommandAgent):
@@ -445,6 +446,7 @@ class ServiceRCMPCommandAgent(RCMPCommandAgent):
 
     def get_i_entry(self, params):
         """Take I_NAME_KEY from params and change it with I_ADDRESS_KEY."""
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if self.I_NAME_KEY not in params:
             raise SyntaxError("%s is missing in the request" % self.I_NAME_KEY)
         return execute_int_robotics_data_query(self.get_i, params,
@@ -462,6 +464,7 @@ class ServiceRCMPCommandAgent(RCMPCommandAgent):
 
     def get_ss_entry(self, params):
         """Take SS_NAME_KEY from params and change it with SS_ADDRESS_KEY and SS_PORT_KEY."""
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if self.SS_NAME_KEY not in params:
             raise SyntaxError("%s is missing in the request" % self.SS_NAME_KEY)
         return execute_int_robotics_data_query(self.get_ss, params,
@@ -1315,6 +1318,7 @@ class ServiceSpace(ServiceLauncher):
     # --- GENERAL PURPOSE ---
 
     def create_ss_entry(self, params):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if self.SS_NAME_KEY not in params:
             raise SyntaxError("%s is missing in the request" % self.SS_NAME_KEY)
         if self.I_NAME_KEY not in params:
@@ -1347,6 +1351,7 @@ class ServiceSpace(ServiceLauncher):
         params[self.SS_PORT_KEY] = str(new_port)
 
     def delete_ss_entry(self, params):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if (self.SS_ADDRESS_KEY in params and params[self.SS_ADDRESS_KEY]) and \
                 (self.SS_PORT_KEY in params and params[self.SS_PORT_KEY]):
             # self.SS_ADDRESS_KEY and self.SS_PORT_KEY are not in params only
@@ -1578,6 +1583,7 @@ class ServiceSpace(ServiceLauncher):
     # --- READ LIST ---
 
     def target_on_read_list(self, params):
+        from rcmp_robotics_data import execute_robotics_data_query
         if self.I_NAME_KEY not in params:
             raise SyntaxError("%s is missing in the request" % self.I_NAME_KEY)
         return execute_robotics_data_query(self.get_ss_4_r_list, params,

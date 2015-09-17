@@ -18,9 +18,9 @@ class RCMPlatformNode:
     # tun0 is the default network interface used: we suppose to run on a machine that is
     # a client in a VPN created with OpenVPN
     NI_TUN = "tun0"
-    NI_ETH = "eth0"
+    # NI_ETH = "eth0"
     # this is specific for machine that has the main network interface in eth1
-    # NI_ETH = "eth1"
+    NI_ETH = "eth1"
     NI_ADDR_KEY = "addr"
     # we have only 2 types of RCMPlatformNodes: S stands for Server and is the old
     # "master" and "vm" (we don't need the distinction between the two); R stands

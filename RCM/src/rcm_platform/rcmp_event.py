@@ -89,25 +89,6 @@ class RCMPEventAgent:
                 result = operation(params)
         return result
 
-    def execute_robotics_data_query(self, robotics_data_related_f, params=None, err_reason="Error"):
-        """Execute a robotics data query. Manage the connection to RCMPRoboticsDataManager
-        and call the function robotics_data_related_f to know what to do with that. Return an object
-        different from RCMPMessage and is used for internal purposes."""
-        from rcmp_robotics_data import sqlite3, RCMPRoboticsDataManager
-        rdm = RCMPRoboticsDataManager()
-        try:
-            rdm.connect()
-            if params:
-                res = robotics_data_related_f(rdm, params)
-            else:
-                res = robotics_data_related_f(rdm)
-            return res
-        except sqlite3.Error as se:
-            reason = "%s: %s" % (err_reason, se)
-            raise IOError(reason)
-        finally:
-            rdm.disconnect()
-
 
 class PNodeInstance(RCMPEventAgent):
     PI_NAME_KEY = "pi_name"
@@ -204,21 +185,23 @@ class PNodeInstance(RCMPEventAgent):
         return result
 
     def execute_update(self, params):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         if self.start_service_logic(params):
             # if the service logic launch went well we have to save this binding
-            self.execute_robotics_data_query(self.create_conn, params,
-                                             "Unable to update the connection between %s and %s" %
-                                             (params[self.PI_S_NAME_KEY], params[self.PI_R_NAME_KEY]))
+            execute_int_robotics_data_query(self.create_conn, params,
+                                            "Unable to update the connection between %s and %s" %
+                                            (params[self.PI_S_NAME_KEY], params[self.PI_R_NAME_KEY]))
             # now the master know about the connection between the two ends of the pair and has to throw
             # a paired event to both
             self.throw_paired_event(params)
 
     def start_service_logic(self, params):
         # TODO this operation must be atomic: check if the solution is ok
+        from rcmp_robotics_data import execute_int_robotics_data_query
         result = True
-        ss_pi_type_target = self.execute_robotics_data_query(self.get_sl_ss_pi_type_target, params,
-                                                             "Unable to get the service space target from "
-                                                             "service logic of '%s'" % params[self.PI_R_NAME_KEY])
+        ss_pi_type_target = execute_int_robotics_data_query(self.get_sl_ss_pi_type_target, params,
+                                                            "Unable to get the service space target from "
+                                                            "service logic of '%s'" % params[self.PI_R_NAME_KEY])
         if ss_pi_type_target:
             ssl_flow = []
             self._logger.debug("-- TMP -- Update has to create the service space on %s" % ss_pi_type_target)
@@ -242,9 +225,9 @@ class PNodeInstance(RCMPEventAgent):
                 # once started the service space associated with the service logic
                 # we have to start all the remaining items of the service logic (nodes
                 # and launchers)
-                sl_items = self.execute_robotics_data_query(self.get_sl_sli, params,
-                                                            "Unable to get the service logic items from "
-                                                            "service logic of '%s'" % params[self.PI_R_NAME_KEY])
+                sl_items = execute_int_robotics_data_query(self.get_sl_sli, params,
+                                                           "Unable to get the service logic items from "
+                                                           "service logic of '%s'" % params[self.PI_R_NAME_KEY])
                 if sl_items:
                     for sli in sl_items:
                         if sli[0] and sli[1] and sli[2] and sli[3]:
@@ -273,13 +256,13 @@ class PNodeInstance(RCMPEventAgent):
                                     firos_connected_cb = False
                                     try:
                                         while not firos_connected_cb:
-                                            ss_ext_port = self.execute_robotics_data_query(self.get_ss_ext_port, cmd,
-                                                                                           "Unable to get an inbound "
-                                                                                           "free port for '%s' '%s' "
-                                                                                           "from service logic of '%s'"
-                                                                                           %
-                                                                                           (sli[0], sli[1],
-                                                                                            params[self.PI_R_NAME_KEY]))
+                                            ss_ext_port = execute_int_robotics_data_query(self.get_ss_ext_port, cmd,
+                                                                                          "Unable to get an inbound "
+                                                                                          "free port for '%s' '%s' "
+                                                                                          "from service logic of '%s'"
+                                                                                          %
+                                                                                          (sli[0], sli[1],
+                                                                                           params[self.PI_R_NAME_KEY]))
                                             if ss_ext_port:
                                                 res = s_node.start(cmd)
                                                 if not res.is_ok() and \
@@ -419,11 +402,12 @@ class PNodeInstance(RCMPEventAgent):
         return result
 
     def execute_rollback_update(self, params):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         self._logger.debug("Executing rollback update with params: %s" % params)
-        conns = self.execute_robotics_data_query(self.get_conn, params,
-                                                 "Unable to get the connections from '%s'" %
-                                                 params[self.PI_R_NAME_KEY] if self.PI_R_NAME_KEY in params
-                                                 else params[self.PI_S_NAME_KEY])
+        conns = execute_int_robotics_data_query(self.get_conn, params,
+                                                "Unable to get the connections from '%s'" %
+                                                params[self.PI_R_NAME_KEY] if self.PI_R_NAME_KEY in params
+                                                else params[self.PI_S_NAME_KEY])
         self._logger.debug("-- TMP -- conns: %s" % conns)
         if conns:
             from rcmp_service_command import ServiceSpace, ServiceNode, ServiceLauncher
@@ -441,12 +425,13 @@ class PNodeInstance(RCMPEventAgent):
                 self.rollback_update_conn(params, s_space, s_node, s_launcher)
 
     def rollback_update_conn(self, params, s_space, s_node, s_launcher):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         self.stop_service_logic(params, s_space, s_node, s_launcher)
         self._logger.debug("-- TMP -- Service logic stopped")
         # in every case we have to cancel the connection and the peer that results unreachable
-        self.execute_robotics_data_query(self.delete_conn, params,
-                                         "Unable to delete the connection between %s and %s" %
-                                         (params[self.PI_S_NAME_KEY], params[self.PI_R_NAME_KEY]))
+        execute_int_robotics_data_query(self.delete_conn, params,
+                                        "Unable to delete the connection between %s and %s" %
+                                        (params[self.PI_S_NAME_KEY], params[self.PI_R_NAME_KEY]))
         self._logger.debug("-- TMP -- Connection deleted")
         # the following must be done to clean up all there is relative to the platform node instance
         # that results disconnected (and is not strictly related with the service logic)
@@ -454,15 +439,16 @@ class PNodeInstance(RCMPEventAgent):
         self._logger.debug("-- TMP -- After clean_up")
 
     def stop_service_logic(self, params, s_space, s_node, s_launcher):
+        from rcmp_robotics_data import execute_int_robotics_data_query
         # TODO this operation must be atomic: in case of failure all has to come back as before
-        ss_name = self.execute_robotics_data_query(self.get_ss_name_from_conn, params,
-                                                   "Unable to get ss_name from the connection '%s' - '%s'" %
-                                                   (params[self.PI_R_NAME_KEY], params[self.PI_S_NAME_KEY]))
+        ss_name = execute_int_robotics_data_query(self.get_ss_name_from_conn, params,
+                                                  "Unable to get ss_name from the connection '%s' - '%s'" %
+                                                  (params[self.PI_R_NAME_KEY], params[self.PI_S_NAME_KEY]))
         self._logger.debug("-- TMP -- Stopping service logic using params: %s and ss_name: %s" % (params, ss_name))
         if ss_name:
-            sl_items = self.execute_robotics_data_query(self.get_sl_sli, params,
-                                                        "Unable to get the service logic items from "
-                                                        "service logic of '%s'" % params[self.PI_R_NAME_KEY])
+            sl_items = execute_int_robotics_data_query(self.get_sl_sli, params,
+                                                       "Unable to get the service logic items from "
+                                                       "service logic of '%s'" % params[self.PI_R_NAME_KEY])
             from rcmp_command import DELETE_SERVICE_SPACE, KILL_SERVICE_NODE, KILL_SERVICE_LAUNCHER, RCMPCommandHandler
             from rcmp_service_command import ServiceSpace, ServiceNode, ServiceLauncher
             if sl_items:
@@ -498,9 +484,9 @@ class PNodeInstance(RCMPEventAgent):
                             s_launcher.stop(cmd)
                         self._logger.debug("-- TMP -- %s stopped" % cmd)
             # once stopped the service logic items (nodes and launchers) we have to delete the service space
-            ss_pi_type_target = self.execute_robotics_data_query(self.get_sl_ss_pi_type_target, params,
-                                                                 "Unable to get the service space target from "
-                                                                 "service logic of '%s'" % params[self.PI_R_NAME_KEY])
+            ss_pi_type_target = execute_int_robotics_data_query(self.get_sl_ss_pi_type_target, params,
+                                                                "Unable to get the service space target from "
+                                                                "service logic of '%s'" % params[self.PI_R_NAME_KEY])
             if ss_pi_type_target:
                 self._logger.debug("Rollback update has to delete the service space on %s" % ss_pi_type_target)
                 result = self.delete_all_of_ss(ss_name, s_space)
@@ -508,8 +494,8 @@ class PNodeInstance(RCMPEventAgent):
                     self._logger.debug("-- TMP -- Forcing service space deletion")
                     # if the cleaning in the right way failed we force the robotics data cleaning
                     # and aspect that the unreachable platform node would clean himself
-                    self.execute_robotics_data_query(self.delete_ss, ss_name,
-                                                     "Unable to delete the service space '%s'" % ss_name)
+                    execute_int_robotics_data_query(self.delete_ss, ss_name,
+                                                    "Unable to delete the service space '%s'" % ss_name)
 
     def get_conn(self, rdm, params):
         if self.PI_R_NAME_KEY in params:
@@ -536,8 +522,9 @@ class PNodeInstance(RCMPEventAgent):
         rdm.delete_connection(params[self.PI_R_NAME_KEY])
 
     def delete_all_of_ss(self, ss_name, s_space):
-        ss_info = self.execute_robotics_data_query(self.get_ss_info, ss_name,
-                                                   "Unable to get the service spaces info of %s" % ss_name)
+        from rcmp_robotics_data import execute_int_robotics_data_query
+        ss_info = execute_int_robotics_data_query(self.get_ss_info, ss_name,
+                                                  "Unable to get the service spaces info of %s" % ss_name)
         if ss_info:
             from rcmp_command import DELETE_L_SERVICE_SPACE, DELETE_SERVICE_SPACE, RCMPCommandHandler
             from rcmp_service_command import ServiceSpace
@@ -550,18 +537,6 @@ class PNodeInstance(RCMPEventAgent):
             result = RCMPMessage()
             result.create_error_response("Not enough info to delete services of '%s'" % ss_name)
         return result
-
-    # def roll_pi_back(self, pi_name, pi_type):
-    #     from rcmp_command import ROLLBACK_PROVISIONING_PNODE_INSTANCE, RCMPCommandHandler
-    #     from rcmp_platform_command import PNodeInstance as PNodeI
-    #     cmd = {RCMPCommandHandler.COMMAND_KEY: ROLLBACK_PROVISIONING_PNODE_INSTANCE,
-    #            PNodeI.I_ADDRESS_KEY: self.pni[RCMPlatformNode.PNI_ADDRESS],
-    #            PNodeI.PI_NAME_KEY: pi_name}
-    #     # for robots we roll back half while for servers we roll back fully
-    #     if pi_type == RCMPlatformNode.R_TYPE:
-    #         cmd[PNodeI.PI_FULL_KEY] = True
-    #     p_node = PNodeI(self.pni, self.wdm)
-    #     p_node.rollback_provisioning(cmd)
 
     def roll_pi_back(self, pi_name):
         # for robots we roll back half while for servers we roll back fully
@@ -577,21 +552,19 @@ class PNodeInstance(RCMPEventAgent):
         # we cannot reach params[self.PI_NAME_KEY] because is the platform node that results
         # unreachable so we cannot do the right delete and we have to locally delete the remaining
         # services associated with that node
+        from rcmp_robotics_data import execute_int_robotics_data_query
         self._logger.debug("-- TMP -- Clean_up with params: %s" % params)
-        rows = self.execute_robotics_data_query(self.get_ss_list, params,
-                                                "Unable to get the service spaces of %s" %
-                                                params[self.PI_S_NAME_KEY]
-                                                if params[self.PI_REACHABLE_KEY] == RCMPlatformNode.R_TYPE
-                                                else params[self.PI_R_NAME_KEY])
+        rows = execute_int_robotics_data_query(self.get_ss_list, params,
+                                               "Unable to get the service spaces of %s" %
+                                               params[self.PI_S_NAME_KEY]
+                                               if params[self.PI_REACHABLE_KEY] == RCMPlatformNode.R_TYPE
+                                               else params[self.PI_R_NAME_KEY])
         if rows:
             self._logger.debug("-- TMP -- Service space missed in the rollback service logic")
             for row in rows:
                 if row:
                     self.delete_all_of_ss(row[0], s_space)
         # at the end we do the rollback provisioning for the disconnected platform node instance
-        # self.roll_pi_back(params[self.PI_S_NAME_KEY]
-        #                   if params[self.PI_REACHABLE_KEY] == RCMPlatformNode.R_TYPE
-        #                   else params[self.PI_R_NAME_KEY], params[self.PI_REACHABLE_KEY])
         self.roll_pi_back(params[self.PI_S_NAME_KEY]
                           if params[self.PI_REACHABLE_KEY] == RCMPlatformNode.R_TYPE
                           else params[self.PI_R_NAME_KEY])
@@ -629,17 +602,18 @@ class PNodeInstance(RCMPEventAgent):
 
     def clean_up_all(self, params, s_space):
         # this is to clean up all there is on the master that is not in the connection context
+        from rcmp_robotics_data import execute_int_robotics_data_query
         self._logger.debug("-- TMP -- Clean_up_all with params: %s" % params)
         # we take all the service spaces
-        rows = self.execute_robotics_data_query(self.get_ss_list_all,
-                                                err_reason="Unable to get the remaining service spaces")
+        rows = execute_int_robotics_data_query(self.get_ss_list_all,
+                                               err_reason="Unable to get the remaining service spaces")
         if rows:
             for row in rows:
                 if row:
                     self.delete_all_of_ss(row[0], s_space)
         # at the end we do the rollback provisioning for all the platform node instances except the master
-        rows = self.execute_robotics_data_query(self.get_pi_list_all,
-                                                err_reason="Unable to get the remaining platform instances")
+        rows = execute_int_robotics_data_query(self.get_pi_list_all,
+                                               err_reason="Unable to get the remaining platform instances")
         if rows:
             for row in rows:
                 if row:

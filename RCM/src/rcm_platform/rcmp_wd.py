@@ -166,7 +166,7 @@ class WatchDog(threading.Thread):
                             result = rcm_n2d_m.notify_robot_status(self.pni[RCMPlatformNode.PNI_NAME]
                                                                    if self.pni[RCMPlatformNode.PNI_TYPE] ==
                                                                    RCMPlatformNode.R_TYPE else self.paired_node_name,
-                                                                   True)
+                                                                   False)
                             if result is None:
                                 self._logger.info("Entity removal status required too much time: don't wait anymore")
                     except Exception as e:
@@ -305,12 +305,16 @@ class WatchDog(threading.Thread):
             request = json.dumps(msg_dict)
             self._rs_queue.put_nowait(request)
             # we have to block until we receive the entity status or too much time has passed
+            self._logger.debug("-- TMP -- waiting for entity %s completed" % ("creation" if connected else "removal"))
             try:
                 rs_notification = self._es_queue.get(timeout=20)
             except Queue.Empty:
                 # no robot status notification
+                self._logger.debug("-- TMP -- entity %s forced to complete" % ("creation" if connected else "removal"))
                 return None
             else:
+                self._logger.debug("-- TMP -- entity %s completed: %s" %
+                                   (("creation" if connected else "removal"), rs_notification))
                 return rs_notification
 
         def sniff(self):
