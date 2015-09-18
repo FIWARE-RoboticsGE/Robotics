@@ -67,6 +67,7 @@ echo "installing rcmplatform"
 cp rcmp_n /usr/local/bin/.
 # these files must be visible as python modules so must be in the
 # python path
+rm -r /usr/local/lib/python2.7/dist-packages/rcm_platform
 cp -r rcm_platform /usr/local/lib/python2.7/dist-packages/.
 
 if [ ! -d "$rcmp_folder" ]

@@ -9,10 +9,10 @@ Welcome to Robotics's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-	u_and_p_guide
-	i_and_a_guide
+    u_and_p_guide
+    i_and_a_guide
 
 Indices and tables
 ==================
