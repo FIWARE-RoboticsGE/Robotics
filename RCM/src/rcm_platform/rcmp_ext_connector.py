@@ -219,18 +219,9 @@ class PIReadWS(GCommandWS):
     """Web service to read platform node instances."""
 
     def generate_internal_msg(self, request):
-        if PI_NAME_PARAM in request.args and request.args[PI_NAME_PARAM]:
-            if request.args[PI_NAME_PARAM][0]:
-                # we suppose that in case there is a parameter with platform instance name
-                # we want a READ_PNODE_INSTANCE
-                msg_dict = {RCMPCommandHandler.COMMAND_KEY: READ_PNODE_INSTANCE,
-                            PNodeInstance.PI_NAME_KEY: request.args[PI_NAME_PARAM][0]}
-            else:
-                raise SyntaxError("%s in the http request but empty" % PI_NAME_PARAM)
-        else:
-            # otherwise we suppose that we want the list of all available platform instances
-            # and so READ_PNODE_INSTANCE_LIST
-            msg_dict = {RCMPCommandHandler.COMMAND_KEY: READ_PNODE_INSTANCE_LIST}
+        # otherwise we suppose that we want the list of all available platform instances
+        # and so READ_PNODE_INSTANCE_LIST
+        msg_dict = {RCMPCommandHandler.COMMAND_KEY: READ_PNODE_INSTANCE_LIST}
         return RCMPMessage(msg_dict)
 
 
