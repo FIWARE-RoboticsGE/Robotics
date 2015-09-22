@@ -262,5 +262,41 @@ instance:
 	~$ curl http://public_ip_master/platform_instance/read
 
 The service logic was good and the provisioning went well if the ``paired``
-field is true. This change of state require some time so wait until considering
-the operation a failure
+field is true. This change of state require some time so wait before considering
+the operation a failure.
+Even in the case of robot as it happens in service logic case, if you want to
+change something about the robot you have to remove the robot and provision
+again with the new values. If you change the name you have to change the name
+in the configuration file of the rcm robot to match the name you newly provide.
+In order to remove the robot you can call platform_instance in the rcm master
+instance:
+
+::
+
+	~$ curl -H 'Content-Type: application/json' -d '{"pi_name":"name_r"}' http://public_ip_master/platform_instance/r_provisioning
+
+------------------------------
+Connecting to the Fiware world
+------------------------------
+
+In order to understand and provide the connection to the fiware world you
+have to know that this link is done through firos and you need to put that
+part in your custom service logic to do it.
+During the master installation the installation wizard asked you if you want
+to enter the fiware world and install the firos package (see
+`Installation and Administration Guide <i_and_a_guide>`_). If you require
+that, firos, rcm_driver and robotics_msgs will be deployed in the ROS
+workspace used by the rcm platform to run the underlying nodes and launchers.
+You can see those 3 elements as service nodes needed to exchange information
+between the robotic world and fiware world.
+Rcm platform speaks to rcm_driver to tell firos what's happening in the
+rcm platform and firos communicates those information to the fiware context
+broker. Rcm_driver speaks to firos in the ROS environment using the language
+specified in robotics_msgs.
+All this explanation is intended to let you know that if you want to connect
+with fiware in your custom made service logic you have to put those 3 nodes
+in it. Moreover those 3 service nodes are deployed in the master and are
+available only there, so when you create your service logic you must tell it
+to run them on the server side.
+If you do that when you turn on your robots they are notified in fiware
+world and and an entity of each robot will be automatically available there.
