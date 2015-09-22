@@ -420,6 +420,8 @@ file could look like:
 	[main]
 	inbound_open_ports=10100, 10101, 10102, 10103
 
+.. _used ports:
+
 Used ports
 ==========
 
@@ -462,3 +464,173 @@ uninstall all the components of Robotics:
 this command removes all the files associated with RCM except the
 `package dependences`_.
 
+-----------------------
+Sanity check procedures
+-----------------------
+
+In order to see if the installation went well you can check if the
+rcm master or rcm robot is running:
+
+::
+
+	~$ sudo service rcmpd status
+	/usr/local/bin/rcmp_n is running
+
+This is not an exhaustive test because this tells you only that the
+daemon is up and running, but doesn't know if all the internal steps
+have started correctly to consider the platform up and running.
+
+End to End testing
+==================
+
+The main test to verify if the platform is well started is to contact
+the web server on rcm master. This tells you that the platform is running and
+the main component can receive the requests from the user:
+
+::
+
+	~$ curl http://public_ip_master
+	<html><body>Welcome to the RCM platform node server!</body></html>
+
+Actually the best way to check if all is ok, is to use the read web service
+always on the web server on rcm master because tells you that the platform is
+running and rcm master receives the requests. Moreover it gives you an overview
+of the platform and what is available into it; this means that you can see
+if the rcm robot you added to the platform are up and running and are
+connected to the rcm master:
+
+::
+
+	~$ curl http://public_ip_master/platform_instance/read
+	{"reason": [], "result": "OK"}
+
+In the example below we have a platform with only the master that answers to
+the requests and so it's fully operative. Rcm robots are running only if are
+listed in this response and ``connected`` is true. At the end they are fully
+operative only if ``paired`` is true too. More information about this can be
+found in the `User and Programmer Guide <u_and_p_guide#add robot to the platform>`_
+
+List of Running Processes
+=========================
+
+This section must be separated into 2 cases because rcm master starts more
+than one process while rcm robot only one (if you don't consider the ROS nodes
+and launchers that are processes or bunch of processes too):
+
+::
+
+	~$ ps aux | grep rcmp_n
+	root 1353 0.1 0.3 223740 19876 ? Rl 08:53 0:41 /usr/bin/python /usr/local/bin/rcmp_n
+	root 2000 0.0 0.2 150016 16968 ? R 08:53 0:06 /usr/bin/python /usr/local/bin/rcmp_n
+
+In the example below we have an rcm master with 2 rcmp_n one is the real server
+and one is the web server used to expose the `RDAPI <http://docs.rdapi.apiary.io/>`_.
+In case of rcm robot you'll have only one process, the real server because on
+those machines you don't have the web server part.
+
+::
+
+	~$ ps aux | grep ros
+
+Using the previous command you can see all the processes launched on the machine
+relative to ROS and here will have firos and all the service nodes use in the
+underlying environment.
+
+Network interfaces Up & Open
+============================
+
+As we said in the section about `used ports`_ Robotics use a number of ports. You
+can see the used ports using the following command:
+
+::
+
+	~$ netstat -lptu
+	tcp 0 0 10.82.99.1:9999 *:* LISTEN -
+	tcp 0 0 192.168.2.74:http *:* LISTEN -
+
+In this example we launched the command on rcm master and extracted part of the
+output: this tells us that the real server communicating with the other rcm agents
+listens on 9999 port and in a VPN address and the web server runs on 80 (http
+standard port) and in the address on eth0 network interface (in this case
+192.168.2.74). You can find the same result for the ports used by each instance
+of firos launched: the address will be the main address and the ports will be
+those in the range you provided during the installation phase.
+
+Databases
+=========
+
+RCM platform uses a database only on rcm master; this is the only database used
+in Robotics; it doesn't need much resources and manages a small set of entries
+so sqlite is the choice for this database.
+You can find it in the folder named /opt/rcm-platform/ and is a file called
+``robotics_data.db``. To access this database you can use the following command:
+
+::
+
+	/opt/rcm-platform$ sqlite3 robotics_data.db
+
+Remember that this database is in a path that can only be written by root so
+in the command below you can only read what's inside (sql select query only
+available in this mode); you can access in writable mode using the same command
+as before but using sudo: this way is not suggested and the preferable way to
+change the values in the database is to use the `RDAPI <http://docs.rdapi.apiary.io/>`_.
+The command sqlite3 is not pre installed so if you want to use you have to
+install it using apt-get tool.
+
+--------------------
+Diagnosis procedures
+--------------------
+
+RCM platform provides logging feature to investigate in case of problems; you can
+find the log files in the folder named /opt/rcm-platform/log. The logger used
+provides information about what happening in the platform and when the max
+dimension of the file called rcmp.log is reached it rolls over appending a number
+after the old version of the file used so you can see what happened before.
+Only 5 files are written before overwrite the first. To more advanced log
+features relative to the service nodes (included firos) you can see the ROS
+documentation about the `log <http://wiki.ros.org/rospy_tutorials/Tutorials/Logging>`_.
+
+Resource availability
+=====================
+
+Robotics itself doesn't require much resources, but the problem is that being
+a platform is supposed to run other things and not only himself. This means that
+if you run the platform alone you can run it under a small CPU and not much RAM
+instead if you intend to use with much service nodes running in it you need a
+really powerful machine. The main idea is to use big machines for the master
+and small machines for the robots: the robots will do small things and delegate
+to the master the more resource greedy tasks.
+
+Remote Service Access
+=====================
+
+The only available accesses to Robotics are the exposed API:
+
+	- `RDAPI <http://docs.rdapi.apiary.io/>`_
+
+	- `Firos <http://docs.firos.apiary.io/>`_
+
+Resource consumption
+====================
+
+The resource consumption depends on how you designed your service logic
+(see the `User and Programmer Guide <u_and_p_guide#Create brains>`_ to learn
+how to do that). If running ``top`` tool you can see that rcmp_n is
+using 50% of CPU certainly there is a problem; usually 5% is much when
+it isn't starting robots, but launching a service logic during the robot
+startup can increase that value up to 100% of the CPU if the service nodes
+you added in your service logic need that much. We can say that if you reach
+some peaks when you're starting a robot is normal, but this is not if that
+peak is constant. In any case when you look at ``top`` tool the use of
+resources is more clear and you can see that rcmp_n increase at start time
+of the sub processes (when it launches the service nodes and launchers) and
+then will be the created processes to use the resource if they need them
+no rcmp_n anymore.
+
+I/O flows
+=========
+
+The only I/O flows that can concern a user of Robotics should be the user
+access to the web services and the communication between firos and the
+context broker. All the other I/O flows are under VPN and should not be
+a problem.
