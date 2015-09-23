@@ -49,7 +49,7 @@ them.
 In addition to the instruction provided by the products you
 have to take care of a couple of things regarding RCM:
 
-	- rcm master internally runs a web server to expose
+	- rcm master internally runs a web server to expose the
 	  `RDAPI <http://docs.rdapi.apiary.io/>`_.
 	  This web server is forced to use the network interface
 	  called 'eth0' so make sure that this is the main network
@@ -229,7 +229,7 @@ robotics_msgs:
 		package.xml
 		README.md
 
-The rcm agents packages contain the scripts for installing and uninstalling
+The rcm agent packages contain the scripts for installing and uninstalling
 all the packages: this is due because during the installation process the
 scripts create the folder used by RCM to manage the ROS nodes and so all the
 other components of Robotics. In any case you can install all the other
@@ -250,7 +250,7 @@ files in the right places: some of these steps require the administration
 permission so after the first steps it will be asked you the sudo password.
 The installer provides a step by step configuration process and can be
 used as a wizard to perform changes in the RCM configuration files. At the
-end of the process it will ask if it has to start the rcm daemon. You can
+end of the process it will ask if it has to start the 'rcm daemon'. You can
 also change directly the available configuration files or create them
 from scratch.
 If you don't let the installer start the rcm daemon or you have manually
@@ -297,7 +297,7 @@ of them.
 	  and is used by the platform as default workspace for ROS custom
 	  nodes and launchers. All the packages of the components of
 	  Robotics that are not rcm platform agents will be put in this
-	  folder under ``src`` sub folder
+	  folder under ``src`` subfolder
 
 	- ``/usr/local/bin/rcmp_n`` is the rcm instance start point, the
 	  agent itself, that is started as daemon through rcmpd: it uses the
@@ -321,7 +321,7 @@ of them.
 		rcmp_service_command.py
 		rcmp_wd.py
 
-	  In case of rcm robot rcmp_ext_connector.py and rcmp_robotics_data.py
+	  In case of rcm robot, rcmp_ext_connector.py and rcmp_robotics_data.py
 	  are not available because they are used only by rcm master
 
 	- ``/opt/rcm-platform/`` this folder is created in the opt folder
@@ -339,8 +339,8 @@ of them.
 Configuration
 -------------
 
-The configuration process prompts questions to the user, proposes available
-responses within brackets in case of selection queries and shows a default
+The configuration process prompts some questions to the user, proposing available
+responses within brackets in case of selection queries and showing a default
 response within square brackets (used in case the user presses only Enter key):
 
 ::
@@ -350,11 +350,11 @@ response within square brackets (used in case the user presses only Enter key):
 
 As said before we have two kinds of agents in the platform so different questions
 are proposed in the two cases.
-Rcm master doesn't have the standard configuration file init.cfg but uses an
-hidden file .init.cfg that looks the same but with only the list of the ports
+Rcm master doesn't have the standard configuration file init.cfg but uses a
+hidden file .init.cfg that looks the same but with only the list of ports
 opened for inbound communication; this instance directly controls the robotics
 data so further creates and uses the sqlite database file named robotics_data.db.
-Rcm robot uses the standard configuration file and need a name for the platform
+Rcm robot uses the standard configuration file and needs a name for the platform
 instance and the ip address where to find rcm master too.
 
 Don't forget that the list of ports for inbound communication should be configured
@@ -373,7 +373,7 @@ For more information about the provisioning process you can see the
 Platform instance configuration files
 =====================================
 
-In the source repository is available under the folder cfg an example of file
+In the source repository is available under the folder 'cfg' an example of file
 configuration called ``init_template.cfg``:
 
 ::
@@ -438,16 +438,16 @@ Remember that all the ROS nodes in the ROS framework under the RCM platform
 use a port to communicate with their master but all these communications are
 inside the VPN channel. During the configuration phase you will be asked for
 opened inbound ports: these ports are needed only if you need that one ROS
-node must be accessed from outside the platform. Firos for example need a
+node must be accessed from outside the platform. Firos, for example, needs a
 port opened to be reached by the fiware context broker and communicate with it.
-Every robot in fiware will live in a logic container called service space so
+Every robot in fiware will live in a logic container called 'service space' so
 the rcm master managing multiple robots in fiware will need as much opened
 ports as the number of service spaces: every service space will be associated
 to a robot and will run a firos instance at master side that will need its
 own port to let the context broker know its existence.
 All inbound ports used by ROS nodes in these cases have to be opened on your
 firewall/NAT: RCM suppose that all the opened inbound ports are properly
-managed by the network manager in your environment.
+managed by the network manager of your environment.
 
 --------------
 Uninstallation
@@ -524,7 +524,7 @@ and launchers that are processes or bunch of processes too):
 	root 1353 0.1 0.3 223740 19876 ? Rl 08:53 0:41 /usr/bin/python /usr/local/bin/rcmp_n
 	root 2000 0.0 0.2 150016 16968 ? R 08:53 0:06 /usr/bin/python /usr/local/bin/rcmp_n
 
-In the example below we have an rcm master with 2 rcmp_n one is the real server
+In the example above we have an rcm master with two rcmp_n processes: one is the real server
 and one is the web server used to expose the `RDAPI <http://docs.rdapi.apiary.io/>`_.
 In case of rcm robot you'll have only one process, the real server because on
 those machines you don't have the web server part.
@@ -540,7 +540,7 @@ underlying environment.
 Network interfaces Up & Open
 ============================
 
-As we said in the section about `used ports`_ Robotics use a number of ports. You
+As we said in the section about `used ports`_ Robotics uses a set of ports. You
 can see the used ports using the following command:
 
 ::
@@ -563,7 +563,7 @@ Databases
 RCM platform uses a database only on rcm master; this is the only database used
 in Robotics; it doesn't need much resources and manages a small set of entries
 so sqlite is the choice for this database.
-You can find it in the folder named /opt/rcm-platform/ and is a file called
+You can find it in the folder named /opt/rcm-platform/ and it is a file called
 ``robotics_data.db``. To access this database you can use the following command:
 
 ::
@@ -595,7 +595,7 @@ Resource availability
 =====================
 
 Robotics itself doesn't require much resources, but the problem is that being
-a platform is supposed to run other things and not only himself. This means that
+a platform is supposed to run other things and not only itself. This means that
 if you run the platform alone you can run it under a small CPU and not much RAM
 instead if you intend to use with much service nodes running in it you need a
 really powerful machine. The main idea is to use big machines for the master
@@ -605,11 +605,11 @@ to the master the more resource greedy tasks.
 Remote Service Access
 =====================
 
-The only available accesses to Robotics are the exposed API:
+The only available accesses to Robotics are the exposed APIs:
 
 	- `RDAPI <http://docs.rdapi.apiary.io/>`_
 
-	- `Firos <http://docs.firos.apiary.io/>`_
+	- `Firos APIs <http://docs.firos.apiary.io/>`_
 
 Resource consumption
 ====================
