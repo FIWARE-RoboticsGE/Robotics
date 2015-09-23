@@ -18,11 +18,11 @@ linked through firos.
 Enable the platform
 -------------------
 
-The first thing to explain is how to enable the platform. One machine become
-the platform when you install the main rcm platform agent, the rcm master (look
+The first thing to explain is how to enable the platform. A machine become
+the platform when you install the main rcm platform agent, i.e. the rcm master (look
 at the `Installation and Administration Guide <i_and_a_guide>`_ to see how to
 do that).
-Being the platform means that this machine or master as we call it will be the
+Being the platform means that this machine (or master, as we call it) will be the
 center of all the user will create in its robotic world: we are speaking of
 simulated robots for now because we still don't have added physical robot in
 that world but can be physical robot or machines that works as robots in the
@@ -61,7 +61,7 @@ physical robots, physical computers or virtual machines, but the important
 thing is that they have to run the rcm robot agent.
 Before that an rcm agent would be recognized by the platform you have to do
 the provisioning of the robot; you have to tell the platform the ``name`` of
-your robot and what will be his role, what he can do: we call this
+your robot and what will be its role, what it can do: we call this
 ``service logic`` (see `Create brains`_ to better understand the concept
 and how to create a service logic).
 You'll provide a new robot calling platform_instance in the rcm master
@@ -73,7 +73,7 @@ instance:
 
 You can do this before or after running the machine with the rcm robot
 agent but only when this operation will be done the robot will be available
-on the platform and could be used.
+on the platform and can be used.
 The name of the robot must be unique because this will be the identifier for
 the robot and all the components generated for that robot; the service logic
 is mandatory too otherwise the provisioning fails.
@@ -90,12 +90,12 @@ available robots. In this case you can see the state of the rcm robot and
 verify if it's up and running:
 
     - ``connected`` is true when you switch on your provisioned robot. The
-      agent on the robot has contacted the master to advertise his presence
+      agent on the robot has contacted the master to advertise its presence
       in the platform and the master agent recognise him as one the the robot
       provisioned by the user
 
-    - ``paired`` is true when the robot is associated with a server (as his
-      brain) and his role is defined (the service logic used for the robot
+    - ``paired`` is true when the robot is associated with a server (as its
+      brain) and its role is defined (the service logic used for the robot
       at provisioning time is running)
 
 .. _Create brains:
@@ -106,7 +106,7 @@ Create brains
 
 In this section will speak about ``service logic``, its meaning and how to
 create a new service logic.
-Often the robot is a machine less computationally equipped but that need
+Often the robot is a machine less computationally equipped but that needs
 more power that he has in order to do all what he has to do. The robot is
 associated with an additional brain at the boot time (after the installation
 of the rcm robot agent and the robot provisioning) and and has a role in the
@@ -128,7 +128,7 @@ In terms of robotic world the logic units are tied with the underlying
       the two types of service items
 
 The service logic provides a context in which the underlying elements can
-run and live to give the feature or brain the robot need.
+run and live to give the feature or brain the robot needs.
 There are many service items already available through the full installation
 of the underlying layer but are not listed through the platform in the fiware
 version: you can see them looking in the ROS environment or documentation to
@@ -151,13 +151,13 @@ The service logic is composed by 3 parts:
 Manage service logic
 ====================
 
-There 3 operations that can be done on a service logic:
+There are three operations that can be done on a service logic:
 
     - create a new service logic
 
     - delete an old and no more used service logic
 
-    - see the set of available service logic
+    - retrieve the set of available service logics
 
 You can create a new service logic calling service_logic in the rcm master
 instance:
@@ -206,7 +206,7 @@ The only parameters that are specific to rcm platform are:
     - ``sn_side`` and ``sl_side``: they represent the side where a node or
       a launcher will be run. The meaning of this field is tied to the meaning
       of the context or service space: the service space is a logical container
-      which represent the link between two machines, a server and a robot, and
+      which represents the link between two machines, a server and a robot, and
       has a sort of manager or main component that in the underlying ROS is
       called ``roscore``. This component will be on server side by default but
       all the other node and launcher can run on server side or robot side.
@@ -216,7 +216,7 @@ The only parameters that are specific to rcm platform are:
       processes
 
 All the information you pass to the platform are not verified so if you put
-a non existing node into the service logic the result will be that the
+a not existing node into the service logic the result will be that the
 platform will be unable to correctly start the robot using that service logic.
 In any case the result of the service logic provisioning will be OK if the
 syntax of the operation was right so be careful when you create a service
@@ -252,7 +252,7 @@ Give the brain a body
 
 When you finished to design the brain for your robot you have to provide a
 body to that brain and you do that when you do the provisioning of the
-robot. All you ask to run in the service logic will be launched where you
+robot. All that you set to run in the service logic will be launched where you
 asked when the robot is switched on after the robot provisioning.
 You can check if all went well looking at platform_instance in the rcm master
 instance:
@@ -262,10 +262,10 @@ instance:
 	~$ curl http://public_ip_master/platform_instance/read
 
 The service logic was good and the provisioning went well if the ``paired``
-field is true. This change of state require some time so wait before considering
+field becomes true. This change of state require some time so wait before considering
 the operation a failure.
 Even in the case of robot as it happens in service logic case, if you want to
-change something about the robot you have to remove the robot and provision
+change something about the robot you have to remove the robot and provide
 again with the new values. If you change the name you have to change the name
 in the configuration file of the rcm robot to match the name you newly provide.
 In order to remove the robot you can call platform_instance in the rcm master
@@ -282,7 +282,7 @@ Connecting to the Fiware world
 In order to understand and provide the connection to the fiware world you
 have to know that this link is done through firos and you need to put that
 part in your custom service logic to do it.
-During the master installation the installation wizard asked you if you want
+During the master installation the wizard ask you if you want
 to enter the fiware world and install the firos package (see
 `Installation and Administration Guide <i_and_a_guide>`_). If you require
 that, firos, rcm_driver and robotics_msgs will be deployed in the ROS
