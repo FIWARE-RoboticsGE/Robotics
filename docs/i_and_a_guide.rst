@@ -511,6 +511,95 @@ listed in this response and ``connected`` is true. At the end they are fully
 operative only if ``paired`` is true too. More information about this can be
 found in the `User and Programmer Guide <u_and_p_guide#add robot to the platform>`_
 
+In order to test if firos is publishing into ContextBroker you can run the
+following command:
+
+::
+	~$ rostopic pub -1 s1 std_msgs/String "data: 'test'"  __ns:=end_end_test
+	
+And then:
+
+::
+	~$ (curl contextbroker_ip:1026/v1/queryContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
+	{
+		"entities": [
+			{
+				"type": "ROBOT",
+				"isPattern": "true",
+				"id": "end_end_test"
+			}
+		],
+		"attributes": [
+			"s1"
+		]
+	}
+	EOF
+	
+If everything went right you'l get something like this:
+
+::
+	{
+		"contextResponses": [
+			{
+				"contextElement": {
+					"attributes": [
+						{
+							"name": "s1",
+							"type": "std_msgs.msg.String",
+							"value": "{%27firosstamp%27: 1443020619.58971, %27data%27: %27test%27}"
+						}
+					],
+					"id": "end_end_test",
+					"isPattern": "false",
+					"type": "ROBOT"
+				},
+				"statusCode": {
+					"code": "200",
+					"reasonPhrase": "OK"
+				}
+			}
+		]
+	}
+	
+Notifications from ContextBroker to firos can be tested by running the following command in one terminal...
+
+::
+	rostopic echo /end_end_test/p1
+	
+... and the following command in another terminal:
+
+::
+	~$ (curl contextbroker_ip:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
+	{
+		  "contextElements": [
+			  {
+				  "type": "ROBOT",
+				  "isPattern": "false",
+				  "id": "end_end_test",
+				  "attributes": [
+				  {
+					  "name": "p1",
+					  "type": "std_msgs.msg.String",
+					  "value": "{%27data%27: %27`echo $RANDOM`%27}"
+				  },
+				  {
+					  "name": "COMMAND",
+					  "type": "COMMAND",
+					  "value": ["p1"]
+				  }
+				  ]
+			  }
+		  ],
+		  "updateAction": "APPEND"
+	}
+	EOF
+
+If everything went ok, in the first terminal you'll see something like this:
+::
+	data: random_number
+	---
+	
+
 List of Running Processes
 =========================
 
@@ -529,13 +618,29 @@ and one is the web server used to expose the `RDAPI <http://docs.rdapi.apiary.io
 In case of rcm robot you'll have only one process, the real server because on
 those machines you don't have the web server part.
 
+With the following command you can check if the firos process has been brought up:
+
+::
+
+	~$ ps aux | grep firos
+	user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
+	
+If the firos mapserver has not been configured you'll get the output shon above,
+otherwise you'll get two process related to firos:
+
+::
+
+	~$ ps aux | grep firos
+	user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
+	user    6615  0.0  1.8 853320 69308 pts/10   Sl+  15:38   0:00 node firos_path/scripts/mapserver.js 10101 9090
+
 ::
 
 	~$ ps aux | grep ros
 
 Using the previous command you can see all the processes launched on the machine
-relative to ROS and here will have firos and all the service nodes use in the
-underlying environment.
+relative to ROS and here will have all the service nodes use in the underlying
+environment (including FIROS).
 
 Network interfaces Up & Open
 ============================
@@ -553,8 +658,17 @@ In this example we launched the command on rcm master and extracted part of the
 output: this tells us that the real server communicating with the other rcm agents
 listens on 9999 port and in a VPN address and the web server runs on 80 (http
 standard port) and in the address on eth0 network interface (in this case
-192.168.2.74). You can find the same result for the ports used by each instance
-of firos launched: the address will be the main address and the ports will be
+192.168.2.74).
+
+If you run the same command in an enviroment where FIROS as been launched you'll
+find the following lines:
+
+::
+
+	tcp 0 0 *:10100 *:* LISTEN -
+	tcp 0 0 *:10101 *:* LISTEN -
+
+The address will be the main address or any and the ports will be
 those in the range you provided during the installation phase.
 
 Databases
@@ -627,6 +741,9 @@ resources is more clear and you can see that rcmp_n increase at start time
 of the sub processes (when it launches the service nodes and launchers) and
 then will be the created processes to use the resource if they need them
 no rcmp_n anymore.
+
+The resource compsumption of firos will be minimal, even under heavy
+messages traffic.
 
 I/O flows
 =========
