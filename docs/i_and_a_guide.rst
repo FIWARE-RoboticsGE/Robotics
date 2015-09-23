@@ -515,11 +515,13 @@ In order to test if firos is publishing into ContextBroker you can run the
 following command:
 
 ::
+
 	~$ rostopic pub -1 s1 std_msgs/String "data: 'test'"  __ns:=end_end_test
 	
 And then:
 
 ::
+
 	~$ (curl contextbroker_ip:1026/v1/queryContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
 	{
 		"entities": [
@@ -538,6 +540,7 @@ And then:
 If everything went right you'l get something like this:
 
 ::
+
 	{
 		"contextResponses": [
 			{
@@ -564,11 +567,13 @@ If everything went right you'l get something like this:
 Notifications from ContextBroker to firos can be tested by running the following command in one terminal...
 
 ::
+
 	rostopic echo /end_end_test/p1
 	
 ... and the following command in another terminal:
 
 ::
+
 	~$ (curl contextbroker_ip:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
 	{
 		  "contextElements": [
@@ -596,6 +601,7 @@ Notifications from ContextBroker to firos can be tested by running the following
 
 If everything went ok, in the first terminal you'll see something like this:
 ::
+
 	data: random_number
 	---
 	
