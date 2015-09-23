@@ -12,11 +12,12 @@ Robotics. Robotics is composed by two components:
 
 It is important to remember that installing RCM means install an
 agent on each device involved in the platform. From now on we
-call the platform rcm platform and the single agent on a device
-rcm instance.
+call the platform 'rcm platform' and the single agent on a device
+'rcm instance'.
 There should be at least one kind of machine involved in the
 rcm platform, a server who hosts the rcm instance we call
-rcm master. We call this machine master.
+'rcm master'; we call this machine master.
+
 This is the base configuration in which you can use only
 simulated robots on that machine.
 In order to add real robots to the rcm platform there should be
@@ -27,7 +28,7 @@ rcm instance called rcm robot.
 Requirements
 ------------
 
-Rcm and firos must have the following software installed:
+RCM and firos must have the following software installed:
 
 	- ``Ubuntu 14.04 LTS/12.04 LTS`` (other versions are not tested)
 
@@ -35,7 +36,7 @@ Rcm and firos must have the following software installed:
 
 	- ``ROS Indigo/Groovy`` (other versions are not tested)
 
-In addition the master must have ``OpenVPN Server`` and
+In addition, the master must have ``OpenVPN server`` and
 ``Sqlite`` in order to install rcm master and the robot must
 have ``OpenVPN client`` in order to install rcm robot.
 Firos need ``Nodejs 0.10`` but is not mandatory and can be
@@ -48,18 +49,18 @@ them.
 In addition to the instruction provided by the products you
 have to take care of a couple of things regarding RCM:
 
-	- rcm master internally runs a web server to expose the
+	- rcm master internally runs a web server to expose
 	  `RDAPI <http://docs.rdapi.apiary.io/>`_.
 	  This web server is forced to use the network interface
 	  called 'eth0' so make sure that this is the main network
 	  interface accessible by the user on the master.
 
 	- rcm instances, as agents of the platform, need to deal
-	  with the other agents in the platform and to do so they
+	  each other and to do so they
 	  use the VPN provided by OpenVPN server installed on the
 	  master. They are forced to use the network interface
 	  called 'tun0' so make sure to configure properly the
-	  OpenVPN server and client to use that network interface.
+	  OpenVPN server and clients to use this network interface.
 	  Moreover remember to emit the certificates for all the
 	  OpenVPN clients using the OpenVPN server on the master
 	  in order to use the same VPN for all the platform.
@@ -72,9 +73,9 @@ Starting from the source code you can create the distribution
 packages needed to install all the components of Robotics; the
 main tool to do this is the python script ``create_robotics_pkg``
 found in the ``scripts`` folder.
-The following are all the option you can have with the tool:
+The following are all the options you can have with the tool:
 
-	- without option: this is the more completed distribution
+	- without options: this is the more completed distribution
 	  package because contains the rcm master agent and all the
 	  packages needed for the communication in fiware (firos,
 	  rcm_driver and robotics_msgs). It creates ``robotics.zip``
@@ -181,7 +182,7 @@ named with what is the type of the node in ROS context. Usually the
 entry point and all the python modules goes in the scripts folder;
 configuration files are managed internally by the node so the provider
 decides where put them. Special folders containing the syntax of messages
-exchanged by the nodes are in srv or msg depending on the type of
+exchanged by the nodes are in 'srv' or 'msg' folder, depending on the type of
 messages that can be exchanged (more detailed and clear explanation
 can be found on `ROS documentation <http://wiki.ros.org/>`_).
 
