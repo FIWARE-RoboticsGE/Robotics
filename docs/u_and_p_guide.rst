@@ -20,7 +20,7 @@ Enable the platform
 
 The first thing to explain is how to enable the platform. A machine become
 the platform when you install the main rcm platform agent, i.e. the rcm master (look
-at the `Installation and Administration Guide <i_and_a_guide>`_ to see how to
+at the :doc:`i_and_a_guide` to see how to
 do that).
 Being the platform means that this machine (or master, as we call it) will be the
 center of all the user will create in its robotic world: we are speaking of
@@ -117,7 +117,7 @@ In terms of robotic world the logic units are tied with the underlying
 
     - ``Node`` a process that perform computation and does one of the task
       of what the user want to let the robot do. Every task can involve more
-      other nodes as sub task: to more information about ROS nodes see the
+      other nodes as sub task: to find more information about ROS nodes see the
       `documentation <http://wiki.ros.org/Nodes>`_. We define this underlying
       component as ``service node`` and can be accessed in the service logic
       as one of the two types of service items
@@ -215,7 +215,7 @@ The only parameters that are specific to rcm platform are:
       should be the preferred side where to launch more resource greedy
       processes
 
-All the information you pass to the platform are not verified so if you put
+The information you pass to the platform is not verified so if you put
 a not existing node into the service logic the result will be that the
 platform will be unable to correctly start the robot using that service logic.
 In any case the result of the service logic provisioning will be OK if the
@@ -284,7 +284,7 @@ have to know that this link is done through firos and you need to put that
 part in your custom service logic to do it.
 During the master installation the wizard ask you if you want
 to enter the fiware world and install the firos package (see
-`Installation and Administration Guide <i_and_a_guide>`_). If you require
+:doc:`i_and_a_guide`). If you require
 that, firos, rcm_driver and robotics_msgs will be deployed in the ROS
 workspace used by the rcm platform to run the underlying nodes and launchers.
 You can see those 3 elements as service nodes needed to exchange information
@@ -300,3 +300,79 @@ available only there, so when you create your service logic you must tell it
 to run them on the server side.
 If you do that when you turn on your robots they are notified in fiware
 world and and an entity of each robot will be automatically available there.
+
+------------------------
+Robots in context broker
+------------------------
+
+Firos will perform a mapping between ROS and context broker following these rules:
+    - Each robot will be an entity, its type will be ROBOT and its id the name of the robot.
+    - The topics from the robot will be translated into attributes, its type will be
+      the type of the topic and the name will be a slightly modified version of the
+      name of the topic.
+    - Each topic will have a timestamp named firostimestamp.
+    - If you want to send a command from context broker to a robot, you must list the
+      name of the attribute to be sent into the value of the attribute COMMAND (type COMMAND).
+    
+::
+
+        {
+            "type": "COMMAND",
+            "name": "COMMAND",
+            "value": [
+                "pose"
+            ]
+        }
+
+Firos whitelist
+===============
+Firos selects which topics will be mapped into context broker throught its whitelist, which
+can be configured in the whitelist.json file. This file has the following format:
+
+::
+
+    "name_of_the_robot": {
+        "publisher": ["list_of_topics_to_be_received_from_context_broker"],
+        "subscriber": ["list_of_topics_to_be_sent_to_context_broker"],
+    }
+
+For example:
+
+::
+
+    "turtle\\w+": {
+        "publisher": ["cmd_vel"],
+        "subscriber": ["pose"]
+    },
+    "robot\\w+": {
+        "publisher": ["cmd_vel.*teleop", ".*move_base/goal", ".*move_base/cancel"],
+        "subscriber": [".*move_base/result"]
+    }
+
+Both the name of the robot and the name of the topics can be regular expresions.
+
+Robots descriptions
+===================
+
+Robots may have some public files so users can understand some characteristics or even
+use their devices. All the references contained in this file can be published on the
+context broker; to do so, just configure the robotdescriptions.json file following this example:
+
+::
+
+    "turtle1": {
+        "descriptions": [
+            "http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch",
+            "http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes"
+        ]
+    }
+
+This data will be inserted in the entity as follows:
+
+::
+
+            {
+                "type": "DescriptionData",
+                "name": "descriptions",
+                "value": "http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch||http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes"
+            },

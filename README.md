@@ -48,13 +48,15 @@ How to run Robotics can be found at [the Installation and Administration Guide](
 
 * [User and Programmer's Guide](docs/u_and_p_guide.rst)
 * [Installation and Administration Guide](docs/i_and_a_guide.rst)
+<!--
 * Container-based deployment
   * [Docker](docker/README.md)
+-->
 
 [Top](#top)
 
 ## License
 
-Robotics is licensed under MIT License.
+Robotics is licensed under [MIT License](https://opensource.org/licenses/MIT).
 
 [Top](#top)

@@ -114,8 +114,8 @@ The following are all the options you can have with the tool:
 Installation
 ------------
 
-As we saw in the previous section the distribution package is
-provided in a compressed file. In this section we will see their
+As we saw in the previous section the distribution packages are
+provided in compressed files. In this section we will see their
 structure and how to use them to install Robotics.
 The robotics.zip and rcm_platform_master.zip are substantially
 the same thing as internal structure:
@@ -230,7 +230,7 @@ robotics_msgs:
 		README.md
 
 The rcm agent packages contain the scripts for installing and uninstalling
-all the packages: this is due because during the installation process the
+all the packages: this is because during the installation process the
 scripts create the folder used by RCM to manage the ROS nodes and so all the
 other components of Robotics. In any case you can install all the other
 components manually simply extracting the content of the distribution
@@ -368,7 +368,7 @@ the rcm master is installed and running exposes `RDAPI <http://docs.rdapi.apiary
 to add robots to the platform you have to call the provisioning web service and
 provide the name there will be used for the robot).
 For more information about the provisioning process you can see the
-`User and Programmer's Guide <u_and_p_guide>`_
+:doc:`u_and_p_guide`.
 
 Platform instance configuration files
 =====================================
@@ -640,13 +640,13 @@ otherwise you'll get two process related to firos:
 	user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
 	user    6615  0.0  1.8 853320 69308 pts/10   Sl+  15:38   0:00 node firos_path/scripts/mapserver.js 10101 9090
 
+Using the following command you can see all the processes launched on the machine
+relative to ROS and here will have all the service nodes use in the underlying
+environment (including FIROS).
+
 ::
 
 	~$ ps aux | grep ros
-
-Using the previous command you can see all the processes launched on the machine
-relative to ROS and here will have all the service nodes use in the underlying
-environment (including FIROS).
 
 Network interfaces Up & Open
 ============================
@@ -674,7 +674,7 @@ find the following lines:
 	tcp 0 0 *:10100 *:* LISTEN -
 	tcp 0 0 *:10101 *:* LISTEN -
 
-The address will be the main address or any and the ports will be
+The address will be the main address or any-adress (e.g. 0.0.0.0) and the ports will be
 those in the range you provided during the installation phase.
 
 Databases
@@ -691,12 +691,12 @@ You can find it in the folder named /opt/rcm-platform/ and it is a file called
 	/opt/rcm-platform$ sqlite3 robotics_data.db
 
 Remember that this database is in a path that can only be written by root so
-in the command below you can only read what's inside (sql select query only
+in the command above you can only read what's inside (sql select query only
 available in this mode); you can access in writable mode using the same command
 as before but using sudo: this way is not suggested and the preferable way to
 change the values in the database is to use the `RDAPI <http://docs.rdapi.apiary.io/>`_.
 The command sqlite3 is not pre installed so if you want to use you have to
-install it using apt-get tool.
+install it using the apt-get tool.
 
 --------------------
 Diagnosis procedures
