@@ -537,7 +537,7 @@ And then:
 	}
 	EOF
 	
-If everything went right you'l get something like this:
+If everything went right you'll get something like this:
 
 ::
 
@@ -600,11 +600,11 @@ Notifications from ContextBroker to firos can be tested by running the following
 	EOF
 
 If everything went ok, in the first terminal you'll see something like this:
+
 ::
 
 	data: random_number
 	---
-	
 
 List of Running Processes
 =========================
@@ -630,8 +630,8 @@ With the following command you can check if the firos process has been brought u
 
 	~$ ps aux | grep firos
 	user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
-	
-If the firos mapserver has not been configured you'll get the output shon above,
+
+If the firos mapserver has not been configured you'll get the output shown above,
 otherwise you'll get two process related to firos:
 
 ::
@@ -666,7 +666,7 @@ listens on 9999 port and in a VPN address and the web server runs on 80 (http
 standard port) and in the address on eth0 network interface (in this case
 192.168.2.74).
 
-If you run the same command in an enviroment where FIROS as been launched you'll
+If you run the same command in an environment where FIROS as been launched you'll
 find the following lines:
 
 ::
@@ -748,7 +748,7 @@ of the sub processes (when it launches the service nodes and launchers) and
 then will be the created processes to use the resource if they need them
 no rcmp_n anymore.
 
-The resource compsumption of firos will be minimal, even under heavy
+The resource consumption of firos will be minimal, even under heavy
 messages traffic.
 
 I/O flows
