@@ -1,0 +1,802 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &amp; Administration Guide &mdash; Robotics 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Robotics 1.0 documentation" href="index.html" />
+    <link rel="prev" title="User &amp; Programmer Guide" href="u_and_p_guide.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="u_and_p_guide.html" title="User &amp; Programmer Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Robotics 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation-administration-guide">
+<h1>Installation &amp; Administration Guide<a class="headerlink" href="#installation-administration-guide" title="Permalink to this headline">¶</a></h1>
+<p>This guide tries to define the procedure to install and configure
+Robotics. Robotics is composed by two components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">RCM</span></tt> (Robot Clone Manager) the distributed platform which
+manages robots</li>
+<li><tt class="docutils literal"><span class="pre">Firos</span></tt> the bridge which connects robots to the FIWARE world</li>
+</ul>
+</div></blockquote>
+<p>It is important to remember that installing RCM means install an
+agent on each device involved in the platform. From now on we
+call the platform &#8216;rcm platform&#8217; and the single agent on a device
+&#8216;rcm instance&#8217;.
+There should be at least one kind of machine involved in the
+rcm platform, a server who hosts the rcm instance we call
+&#8216;rcm master&#8217;; we call this machine master.</p>
+<p>This is the base configuration in which you can use only
+simulated robots on that machine.
+In order to add real robots to the rcm platform there should be
+added other kind of machines called robots. Each robot hosts an
+rcm instance called rcm robot.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>RCM and firos must have the following software installed:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Ubuntu</span> <span class="pre">14.04</span> <span class="pre">LTS/12.04</span> <span class="pre">LTS</span></tt> (other versions are not tested)</li>
+<li><tt class="docutils literal"><span class="pre">Python</span> <span class="pre">2.7</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ROS</span> <span class="pre">Indigo/Groovy</span></tt> (other versions are not tested)</li>
+</ul>
+</div></blockquote>
+<p>In addition, the master must have <tt class="docutils literal"><span class="pre">OpenVPN</span> <span class="pre">server</span></tt> and
+<tt class="docutils literal"><span class="pre">Sqlite</span></tt> in order to install rcm master and the robot must
+have <tt class="docutils literal"><span class="pre">OpenVPN</span> <span class="pre">client</span></tt> in order to install rcm robot.
+Firos need <tt class="docutils literal"><span class="pre">Nodejs</span> <span class="pre">0.10</span></tt> but is not mandatory and can be
+configured to not use the additional features that requires it.</p>
+<p>Python and sqlite should be already available in the Ubuntu OS
+but in any case for all the software requirements refer to the
+products pages to find out how to download, install and configure
+them.
+In addition to the instruction provided by the products you
+have to take care of a couple of things regarding RCM:</p>
+<blockquote>
+<div><ul class="simple">
+<li>rcm master internally runs a web server to expose the
+<a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a>.
+This web server is forced to use the network interface
+called &#8216;eth0&#8217; so make sure that this is the main network
+interface accessible by the user on the master.</li>
+<li>rcm instances, as agents of the platform, need to deal
+each other and to do so they
+use the VPN provided by OpenVPN server installed on the
+master. They are forced to use the network interface
+called &#8216;tun0&#8217; so make sure to configure properly the
+OpenVPN server and clients to use this network interface.
+Moreover remember to emit the certificates for all the
+OpenVPN clients using the OpenVPN server on the master
+in order to use the same VPN for all the platform.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="distribution">
+<h2>Distribution<a class="headerlink" href="#distribution" title="Permalink to this headline">¶</a></h2>
+<p>Starting from the source code you can create the distribution
+packages needed to install all the components of Robotics; the
+main tool to do this is the python script <tt class="docutils literal"><span class="pre">create_robotics_pkg</span></tt>
+found in the <tt class="docutils literal"><span class="pre">scripts</span></tt> folder.
+The following are all the options you can have with the tool:</p>
+<blockquote>
+<div><ul class="simple">
+<li>without options: this is the more completed distribution
+package because contains the rcm master agent and all the
+packages needed for the communication in fiware (firos,
+rcm_driver and robotics_msgs). It creates <tt class="docutils literal"><span class="pre">robotics.zip</span></tt>
+with the root folder called <tt class="docutils literal"><span class="pre">rcm_platform_master</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">master</span></tt>: this is the distribution package with only the
+rcm master agent. It creates <tt class="docutils literal"><span class="pre">rcm_platform_master.zip</span></tt>
+with the root folder called <tt class="docutils literal"><span class="pre">rcm_platform_master</span></tt> but the
+packages needed for the communication in fiware must be
+created and installed separately</li>
+<li><tt class="docutils literal"><span class="pre">robot</span></tt>: this is the distribution package with only the
+rcm robot agent. It creates <tt class="docutils literal"><span class="pre">rcm_platform_robot.zip</span></tt> with
+the root folder called <tt class="docutils literal"><span class="pre">rcm_platform_robot</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">firos</span></tt>: this is the distribution package with only firos.
+It creates <tt class="docutils literal"><span class="pre">firos.zip</span></tt> with the root folder called <tt class="docutils literal"><span class="pre">firos</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">rcm_driver</span></tt>: this is the distribution package with only
+rcm_driver. It creates <tt class="docutils literal"><span class="pre">rcm_driver.zip</span></tt> with the root folder
+called <tt class="docutils literal"><span class="pre">rcm</span></tt>. This is a driver component to let the platform
+communicate with firos through ROS</li>
+<li><tt class="docutils literal"><span class="pre">robotics_msgs</span></tt>: this is the distribution package with only
+robotics_msgs. It creates <tt class="docutils literal"><span class="pre">robotics_msgs.zip</span></tt> with the root
+folder called <tt class="docutils literal"><span class="pre">robotics_msgs</span></tt>. This is the component providing
+the intercommunication language for firos and rcm_driver
+through ROS</li>
+</ul>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre>~/rcm_platform_master$ ./create_robotics_pkg
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>As we saw in the previous section the distribution packages are
+provided in compressed files. In this section we will see their
+structure and how to use them to install Robotics.
+The robotics.zip and rcm_platform_master.zip are substantially
+the same thing as internal structure:</p>
+<div class="highlight-python"><div class="highlight"><pre>rcm_platform_master/
+        rcm_platform/
+                __init__.py
+                rcmp_command.py
+                rcmp_event.py
+                rcmp_ext_connector.py
+                rcmp_inter_communication.py
+                rcmp_ms.py
+                rcmp_node.py
+                rcmp_platform_command.py
+                rcmp_robotics_data.py
+                rcmp_service_command.py
+                rcmp_wd.py
+        ros/
+                rosconsole.config
+        install.sh
+        sub_inst.sh
+        uninstall.sh
+        sub_uninst.sh
+        rcmpd
+        rcmp_n
+</pre></div>
+</div>
+<p>The only difference between the two packages is that the robotics.zip
+in the root folder has firos.zip, rcm_driver.zip, and  robotics_msgs.zip
+too. These are the distribution packages of the other components used
+to complete the Robotics and are embedded into the main package.</p>
+<p>The rcm_platform_robot.zip shares the same structure of the previous two
+but loses the two python modules related to the web server and the
+database that are only available in the rcm master agent:</p>
+<div class="highlight-python"><div class="highlight"><pre>rcm_platform_robot/
+        rcm_platform/
+                __init__.py
+                rcmp_command.py
+                rcmp_event.py
+                rcmp_inter_communication.py
+                rcmp_ms.py
+                rcmp_node.py
+                rcmp_platform_command.py
+                rcmp_service_command.py
+                rcmp_wd.py
+        ros/
+                rosconsole.config
+        install.sh
+        sub_inst.sh
+        uninstall.sh
+        sub_uninst.sh
+        rcmpd
+        rcmp_n
+</pre></div>
+</div>
+<p>The other three packages shares the same structure of typical ROS
+nodes implemented in python with the root folder named with the
+package name used in ROS environment and the main python entry point
+named with what is the type of the node in ROS context. Usually the
+entry point and all the python modules goes in the scripts folder;
+configuration files are managed internally by the node so the provider
+decides where put them. Special folders containing the syntax of messages
+exchanged by the nodes are in &#8216;srv&#8217; or &#8216;msg&#8217; folder, depending on the type of
+messages that can be exchanged (more detailed and clear explanation
+can be found on <a class="reference external" href="http://wiki.ros.org/">ROS documentation</a>).</p>
+<p>Firos:</p>
+<div class="highlight-python"><div class="highlight"><pre>firos/
+        config/
+        scripts/
+                include/
+                        ...
+                core.py
+                ...
+        CMakeLists.txt
+        License.txt
+        package.xml
+        README.md
+</pre></div>
+</div>
+<p>rcm_driver:</p>
+<div class="highlight-python"><div class="highlight"><pre>rcm/
+        scripts/
+                rcm_driver.py
+        CMakeLists.txt
+        LICENSE.txt
+        package.xml
+        README.md
+</pre></div>
+</div>
+<p>robotics_msgs:</p>
+<div class="highlight-python"><div class="highlight"><pre>robotics_msgs/
+        msg/
+                CB_Event.msg
+                Robot_Event.msg
+        srv/
+                FIROS_info.srv
+        CMakeLists.txt
+        LICENSE.txt
+        package.xml
+        README.md
+</pre></div>
+</div>
+<p>The rcm agent packages contain the scripts for installing and uninstalling
+all the packages: this is because during the installation process the
+scripts create the folder used by RCM to manage the ROS nodes and so all the
+other components of Robotics. In any case you can install all the other
+components manually simply extracting the content of the distribution
+packages into <tt class="docutils literal"><span class="pre">rcmp_ws/src</span></tt> folder (this folder is already available only
+if you have already installed the rcm platform part).</p>
+<p>For what concern the installation of robotics.zip, rcm_platform_master.zip
+or rcm_platform_robot.zip you have to extract the content of the selected
+component and run the install.sh found under the root folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>~/rcm_platform_master$ ./install.sh
+</pre></div>
+</div>
+<p>The procedure installs the package dependences and places all the needed
+files in the right places: some of these steps require the administration
+permission so after the first steps it will be asked you the sudo password.
+The installer provides a step by step configuration process and can be
+used as a wizard to perform changes in the RCM configuration files. At the
+end of the process it will ask if it has to start the &#8216;rcm daemon&#8217;. You can
+also change directly the available configuration files or create them
+from scratch.
+If you don&#8217;t let the installer start the rcm daemon or you have manually
+changed the configuration files, you have to start or restart the rcm
+daemon as follow:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ sudo service rcmpd start
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ sudo service rcmpd restart
+</pre></div>
+</div>
+<div class="section" id="package-dependences">
+<span id="id1"></span><h3>Package dependences<a class="headerlink" href="#package-dependences" title="Permalink to this headline">¶</a></h3>
+<p>RCM has two main dependences that are automatically installed using apt-get
+tool during the installation:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">python-netifaces</span></tt> for the access of the network interfaces (tun0, eth0)</li>
+<li><tt class="docutils literal"><span class="pre">python-twisted</span></tt> to implement the web service</li>
+</ul>
+</div></blockquote>
+<p>python-twisted is used as web server to provide the web services needed
+to implement the <a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a> available only
+through the rcm master so this package will be installed and used only
+in that rcm instance.</p>
+</div>
+<div class="section" id="installation-files">
+<h3>Installation files<a class="headerlink" href="#installation-files" title="Permalink to this headline">¶</a></h3>
+<p>As said before, the installer places all the needed files in the
+installation package in the right places and creates all the needed
+folders; in this section we will list all the files and folders arranged
+by the installation process and will give a brief explanation for each
+of them.</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">~/rcmp_ws/</span></tt> this folder is created in the installer&#8217;s home
+and is used by the platform as default workspace for ROS custom
+nodes and launchers. All the packages of the components of
+Robotics that are not rcm platform agents will be put in this
+folder under <tt class="docutils literal"><span class="pre">src</span></tt> subfolder</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">/usr/local/bin/rcmp_n</span></tt> is the rcm instance start point, the
+agent itself, that is started as daemon through rcmpd: it uses the
+python modules in the python package <tt class="docutils literal"><span class="pre">rcm_platform</span></tt> to do its work</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">/usr/local/lib/python2.7/dist-packages/rcm_platform/</span></tt> is the
+core python package that implements all the feature of RCM and
+contains all the python modules. The content will be the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_command</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_event</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_ext_connector</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_inter_communication</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_ms</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_node</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_platform_command</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_robotics_data</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_service_command</span><span class="o">.</span><span class="n">py</span>
+<span class="n">rcmp_wd</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>In case of rcm robot, rcmp_ext_connector.py and rcmp_robotics_data.py
+are not available because they are used only by rcm master</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">/opt/rcm-platform/</span></tt> this folder is created in the opt folder
+and is the base directory for the agent; it contains the configuration
+files, the robotics data, the logs and the ROS logging configuration
+file. Remember that init.cfg is only available in robots while
+.init.cfg and robotics data are available only in the master</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">/etc/init.d/rcmpd</span></tt> is the script used to keep the rcm instance as
+a daemon in the system where is installed; the installer uses
+update-rc.d tool to insert into the system init structure so that the
+daemon will be run at start time</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>The configuration process prompts some questions to the user, proposing available
+responses within brackets in case of selection queries and showing a default
+response within square brackets (used in case the user presses only Enter key):</p>
+<div class="highlight-python"><div class="highlight"><pre>~/rcm_platform_master$ ./install
+The workspace rcmp_ws already exists: do you wanna replace it ([Y]es/no)?
+</pre></div>
+</div>
+<p>As said before we have two kinds of agents in the platform so different questions
+are proposed in the two cases.
+Rcm master doesn&#8217;t have the standard configuration file init.cfg but uses a
+hidden file .init.cfg that looks the same but with only the list of ports
+opened for inbound communication; this instance directly controls the robotics
+data so further creates and uses the sqlite database file named robotics_data.db.
+Rcm robot uses the standard configuration file and needs a name for the platform
+instance and the ip address where to find rcm master too.</p>
+<p>Don&#8217;t forget that the list of ports for inbound communication should be configured
+only if we need ports available from outside the VPN so you have to open the ports
+on the NAT and firewall to make them available to the platform. Moreover for what
+concern the name and the ip address configured on the rcm robots is important to
+remember that the ip address of the master must be the one in the VPN (network
+interface &#8216;tun0&#8217; is used by the instances to communicate each other) and the name
+of the robot must match the one provided during the provisioning phase (once
+the rcm master is installed and running exposes <a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a>:
+to add robots to the platform you have to call the provisioning web service and
+provide the name there will be used for the robot).
+For more information about the provisioning process you can see the
+<a class="reference internal" href="u_and_p_guide.html"><em>User &amp; Programmer Guide</em></a>.</p>
+<div class="section" id="platform-instance-configuration-files">
+<h3>Platform instance configuration files<a class="headerlink" href="#platform-instance-configuration-files" title="Permalink to this headline">¶</a></h3>
+<p>In the source repository is available under the folder &#8216;cfg&#8217; an example of file
+configuration called <tt class="docutils literal"><span class="pre">init_template.cfg</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># This is a template for the configuration file for an RCM platform node.</span>
+<span class="c"># Remember that only robots and virtual machines must have this file specified and that must be renamed</span>
+<span class="c"># with the name init.cfg.</span>
+
+<span class="p">[</span><span class="n">main</span><span class="p">]</span>
+
+<span class="c"># the name for the instance (rcm platform node)</span>
+<span class="c"># name=instance_name</span>
+
+<span class="c"># specify a list of ports that are previously opened for inbound communication</span>
+<span class="c"># inbound_open_ports=10100, 10101, 10102, 10103</span>
+
+<span class="c"># specify the type of the instance (rcm platform node) in case the system we are running on is a robot;</span>
+<span class="c"># used as flag to distinguish a robot from a vm instance (the master doesn&#39;t have this configuration file so</span>
+<span class="c"># it is already different)</span>
+<span class="c"># robot=yes</span>
+
+<span class="c"># the ip of the master rcm platform node</span>
+<span class="c"># ip_master=10.xx.yy.1</span>
+</pre></div>
+</div>
+<p>The file is a template of what is created with the wizard procedure and can be
+used as base for the creation of the needed files from scratch: before every
+option in the main (and only for now) section there is a brief description of
+the meaning of that option.
+The following examples are how the init.cfg file on the robot and the .init.cfg
+file could look like:</p>
+<div class="highlight-python"><div class="highlight"><pre># init.cfg
+
+[main]
+name=robot1
+robot=yes
+ip_master=10.11.12.1
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># .init.cfg</span>
+
+<span class="p">[</span><span class="n">main</span><span class="p">]</span>
+<span class="n">inbound_open_ports</span><span class="o">=</span><span class="mi">10100</span><span class="p">,</span> <span class="mi">10101</span><span class="p">,</span> <span class="mi">10102</span><span class="p">,</span> <span class="mi">10103</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="used-ports">
+<span id="id4"></span><h3>Used ports<a class="headerlink" href="#used-ports" title="Permalink to this headline">¶</a></h3>
+<p>The main port used by all the rcm instance in the platform is 9999 on TCP
+protocol to communicate each other: it is used inside the VPN channel so there
+shouldn&#8217;t be problems about inbound/outbound access and firewall/NAT concerns.
+Furthermore in case of the master we need the port 1194 on UDP protocol used
+by OpenVPN server to provide the VPN channel and the port 80 on TCP protocol
+used by rcm master to provide the interaction with external users. These two
+ports require inbound and outbound access so you have to open them on your
+firewall/NAT.
+Remember that all the ROS nodes in the ROS framework under the RCM platform
+use a port to communicate with their master but all these communications are
+inside the VPN channel. During the configuration phase you will be asked for
+opened inbound ports: these ports are needed only if you need that one ROS
+node must be accessed from outside the platform. Firos, for example, needs a
+port opened to be reached by the fiware context broker and communicate with it.
+Every robot in fiware will live in a logic container called &#8216;service space&#8217; so
+the rcm master managing multiple robots in fiware will need as much opened
+ports as the number of service spaces: every service space will be associated
+to a robot and will run a firos instance at master side that will need its
+own port to let the context broker know its existence.
+All inbound ports used by ROS nodes in these cases have to be opened on your
+firewall/NAT: RCM suppose that all the opened inbound ports are properly
+managed by the network manager of your environment.</p>
+</div>
+</div>
+<div class="section" id="uninstallation">
+<h2>Uninstallation<a class="headerlink" href="#uninstallation" title="Permalink to this headline">¶</a></h2>
+<p>The distribution package of all the rcm platforms provides the tool for
+uninstalling Robotics. Enter into distribution folder or if no more available
+take the zip file and extract the content. Run the <tt class="docutils literal"><span class="pre">uninstall.sh</span></tt> script to
+uninstall all the components of Robotics:</p>
+<div class="highlight-python"><div class="highlight"><pre>~/rcm_platform_pkg$ ./uninstall.sh
+</pre></div>
+</div>
+<p>this command removes all the files associated with RCM except the
+<a class="reference internal" href="#package-dependences">package dependences</a>.</p>
+</div>
+<div class="section" id="sanity-check-procedures">
+<h2>Sanity check procedures<a class="headerlink" href="#sanity-check-procedures" title="Permalink to this headline">¶</a></h2>
+<p>In order to see if the installation went well you can check if the
+rcm master or rcm robot is running:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ sudo service rcmpd status
+/usr/local/bin/rcmp_n is running
+</pre></div>
+</div>
+<p>This is not an exhaustive test because this tells you only that the
+daemon is up and running, but doesn&#8217;t know if all the internal steps
+have started correctly to consider the platform up and running.</p>
+<div class="section" id="end-to-end-testing">
+<h3>End to End testing<a class="headerlink" href="#end-to-end-testing" title="Permalink to this headline">¶</a></h3>
+<p>The main test to verify if the platform is well started is to contact
+the web server on rcm master. This tells you that the platform is running and
+the main component can receive the requests from the user:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master
+&lt;html&gt;&lt;body&gt;Welcome to the RCM platform node server!&lt;/body&gt;&lt;/html&gt;
+</pre></div>
+</div>
+<p>Actually the best way to check if all is ok, is to use the read web service
+always on the web server on rcm master because tells you that the platform is
+running and rcm master receives the requests. Moreover it gives you an overview
+of the platform and what is available into it; this means that you can see
+if the rcm robot you added to the platform are up and running and are
+connected to the rcm master:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master/platform_instance/read
+{&quot;reason&quot;: [], &quot;result&quot;: &quot;OK&quot;}
+</pre></div>
+</div>
+<p>In the example below we have a platform with only the master that answers to
+the requests and so it&#8217;s fully operative. Rcm robots are running only if are
+listed in this response and <tt class="docutils literal"><span class="pre">connected</span></tt> is true. At the end they are fully
+operative only if <tt class="docutils literal"><span class="pre">paired</span></tt> is true too. More information about this can be
+found in the <a class="reference external" href="u_and_p_guide#addrobottotheplatform">User and Programmer Guide</a></p>
+<p>In order to test if firos is publishing into ContextBroker you can run the
+following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ rostopic pub -1 s1 std_msgs/String &quot;data: &#39;test&#39;&quot;  __ns:=end_end_test
+</pre></div>
+</div>
+<p>And then:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ (curl contextbroker_ip:1026/v1/queryContext -s -S --header &#39;Content-Type: application/json&#39; --header &#39;Accept: application/json&#39; -d @- | python -mjson.tool) &lt;&lt;EOF
+{
+        &quot;entities&quot;: [
+                {
+                        &quot;type&quot;: &quot;ROBOT&quot;,
+                        &quot;isPattern&quot;: &quot;true&quot;,
+                        &quot;id&quot;: &quot;end_end_test&quot;
+                }
+        ],
+        &quot;attributes&quot;: [
+                &quot;s1&quot;
+        ]
+}
+EOF
+</pre></div>
+</div>
+<p>If everything went right you&#8217;ll get something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+        <span class="s">&quot;contextResponses&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                        <span class="s">&quot;contextElement&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s">&quot;attributes&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                        <span class="p">{</span>
+                                                <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;s1&quot;</span><span class="p">,</span>
+                                                <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;std_msgs.msg.String&quot;</span><span class="p">,</span>
+                                                <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;{</span><span class="si">%27f</span><span class="s">irosstamp%27: 1443020619.58971, </span><span class="si">%27d</span><span class="s">ata%27: %27test%27}&quot;</span>
+                                        <span class="p">}</span>
+                                <span class="p">],</span>
+                                <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="s">&quot;end_end_test&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;isPattern&quot;</span><span class="p">:</span> <span class="s">&quot;false&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;ROBOT&quot;</span>
+                        <span class="p">},</span>
+                        <span class="s">&quot;statusCode&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s">&quot;code&quot;</span><span class="p">:</span> <span class="s">&quot;200&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;reasonPhrase&quot;</span><span class="p">:</span> <span class="s">&quot;OK&quot;</span>
+                        <span class="p">}</span>
+                <span class="p">}</span>
+        <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Notifications from ContextBroker to firos can be tested by running the following command in one terminal...</p>
+<div class="highlight-python"><div class="highlight"><pre>rostopic echo /end_end_test/p1
+</pre></div>
+</div>
+<p>... and the following command in another terminal:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ (curl contextbroker_ip:1026/v1/updateContext -s -S --header &#39;Content-Type: application/json&#39; --header &#39;Accept: application/json&#39; -d @- | python -mjson.tool) &lt;&lt;EOF
+{
+          &quot;contextElements&quot;: [
+                  {
+                          &quot;type&quot;: &quot;ROBOT&quot;,
+                          &quot;isPattern&quot;: &quot;false&quot;,
+                          &quot;id&quot;: &quot;end_end_test&quot;,
+                          &quot;attributes&quot;: [
+                          {
+                                  &quot;name&quot;: &quot;p1&quot;,
+                                  &quot;type&quot;: &quot;std_msgs.msg.String&quot;,
+                                  &quot;value&quot;: &quot;{%27data%27: %27`echo $RANDOM`%27}&quot;
+                          },
+                          {
+                                  &quot;name&quot;: &quot;COMMAND&quot;,
+                                  &quot;type&quot;: &quot;COMMAND&quot;,
+                                  &quot;value&quot;: [&quot;p1&quot;]
+                          }
+                          ]
+                  }
+          ],
+          &quot;updateAction&quot;: &quot;APPEND&quot;
+}
+EOF
+</pre></div>
+</div>
+<p>If everything went ok, in the first terminal you&#8217;ll see something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>data: random_number
+---
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-of-running-processes">
+<h3>List of Running Processes<a class="headerlink" href="#list-of-running-processes" title="Permalink to this headline">¶</a></h3>
+<p>This section must be separated into 2 cases because rcm master starts more
+than one process while rcm robot only one (if you don&#8217;t consider the ROS nodes
+and launchers that are processes or bunch of processes too):</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ ps aux | grep rcmp_n
+root 1353 0.1 0.3 223740 19876 ? Rl 08:53 0:41 /usr/bin/python /usr/local/bin/rcmp_n
+root 2000 0.0 0.2 150016 16968 ? R 08:53 0:06 /usr/bin/python /usr/local/bin/rcmp_n
+</pre></div>
+</div>
+<p>In the example above we have an rcm master with two rcmp_n processes: one is the real server
+and one is the web server used to expose the <a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a>.
+In case of rcm robot you&#8217;ll have only one process, the real server because on
+those machines you don&#8217;t have the web server part.</p>
+<p>With the following command you can check if the firos process has been brought up:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ ps aux | grep firos
+user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
+</pre></div>
+</div>
+<p>If the firos mapserver has not been configured you&#8217;ll get the output shown above,
+otherwise you&#8217;ll get two process related to firos:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ ps aux | grep firos
+user    6576  0.1  0.4 513748 18184 pts/10   Sl+  15:38   0:02 python firos_path/scripts/core.py
+user    6615  0.0  1.8 853320 69308 pts/10   Sl+  15:38   0:00 node firos_path/scripts/mapserver.js 10101 9090
+</pre></div>
+</div>
+<p>Using the following command you can see all the processes launched on the machine
+relative to ROS and here will have all the service nodes use in the underlying
+environment (including FIROS).</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ ps aux | grep ros
+</pre></div>
+</div>
+</div>
+<div class="section" id="network-interfaces-up-open">
+<h3>Network interfaces Up &amp; Open<a class="headerlink" href="#network-interfaces-up-open" title="Permalink to this headline">¶</a></h3>
+<p>As we said in the section about <a class="reference internal" href="#used-ports">used ports</a> Robotics uses a set of ports. You
+can see the used ports using the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ netstat -lptu
+tcp 0 0 10.82.99.1:9999 *:* LISTEN -
+tcp 0 0 192.168.2.74:http *:* LISTEN -
+</pre></div>
+</div>
+<p>In this example we launched the command on rcm master and extracted part of the
+output: this tells us that the real server communicating with the other rcm agents
+listens on 9999 port and in a VPN address and the web server runs on 80 (http
+standard port) and in the address on eth0 network interface (in this case
+192.168.2.74).</p>
+<p>If you run the same command in an environment where FIROS as been launched you&#8217;ll
+find the following lines:</p>
+<div class="highlight-python"><div class="highlight"><pre>tcp 0 0 *:10100 *:* LISTEN -
+tcp 0 0 *:10101 *:* LISTEN -
+</pre></div>
+</div>
+<p>The address will be the main address or any-adress (e.g. 0.0.0.0) and the ports will be
+those in the range you provided during the installation phase.</p>
+</div>
+<div class="section" id="databases">
+<h3>Databases<a class="headerlink" href="#databases" title="Permalink to this headline">¶</a></h3>
+<p>RCM platform uses a database only on rcm master; this is the only database used
+in Robotics; it doesn&#8217;t need much resources and manages a small set of entries
+so sqlite is the choice for this database.
+You can find it in the folder named /opt/rcm-platform/ and it is a file called
+<tt class="docutils literal"><span class="pre">robotics_data.db</span></tt>. To access this database you can use the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>/opt/rcm-platform$ sqlite3 robotics_data.db
+</pre></div>
+</div>
+<p>Remember that this database is in a path that can only be written by root so
+in the command above you can only read what&#8217;s inside (sql select query only
+available in this mode); you can access in writable mode using the same command
+as before but using sudo: this way is not suggested and the preferable way to
+change the values in the database is to use the <a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a>.
+The command sqlite3 is not pre installed so if you want to use you have to
+install it using the apt-get tool.</p>
+</div>
+</div>
+<div class="section" id="diagnosis-procedures">
+<h2>Diagnosis procedures<a class="headerlink" href="#diagnosis-procedures" title="Permalink to this headline">¶</a></h2>
+<p>RCM platform provides logging feature to investigate in case of problems; you can
+find the log files in the folder named /opt/rcm-platform/log. The logger used
+provides information about what happening in the platform and when the max
+dimension of the file called rcmp.log is reached it rolls over appending a number
+after the old version of the file used so you can see what happened before.
+Only 5 files are written before overwrite the first. To more advanced log
+features relative to the service nodes (included firos) you can see the ROS
+documentation about the <a class="reference external" href="http://wiki.ros.org/rospy_tutorials/Tutorials/Logging">log</a>.</p>
+<div class="section" id="resource-availability">
+<h3>Resource availability<a class="headerlink" href="#resource-availability" title="Permalink to this headline">¶</a></h3>
+<p>Robotics itself doesn&#8217;t require much resources, but the problem is that being
+a platform is supposed to run other things and not only itself. This means that
+if you run the platform alone you can run it under a small CPU and not much RAM
+instead if you intend to use with much service nodes running in it you need a
+really powerful machine. The main idea is to use big machines for the master
+and small machines for the robots: the robots will do small things and delegate
+to the master the more resource greedy tasks.</p>
+</div>
+<div class="section" id="remote-service-access">
+<h3>Remote Service Access<a class="headerlink" href="#remote-service-access" title="Permalink to this headline">¶</a></h3>
+<p>The only available accesses to Robotics are the exposed APIs:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://docs.rdapi.apiary.io/">RDAPI</a></li>
+<li><a class="reference external" href="http://docs.firos.apiary.io/">Firos APIs</a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="resource-consumption">
+<h3>Resource consumption<a class="headerlink" href="#resource-consumption" title="Permalink to this headline">¶</a></h3>
+<p>The resource consumption depends on how you designed your service logic
+(see the <a class="reference external" href="u_and_p_guide#Createbrains">User and Programmer Guide</a> to learn
+how to do that). If running <tt class="docutils literal"><span class="pre">top</span></tt> tool you can see that rcmp_n is
+using 50% of CPU certainly there is a problem; usually 5% is much when
+it isn&#8217;t starting robots, but launching a service logic during the robot
+startup can increase that value up to 100% of the CPU if the service nodes
+you added in your service logic need that much. We can say that if you reach
+some peaks when you&#8217;re starting a robot is normal, but this is not if that
+peak is constant. In any case when you look at <tt class="docutils literal"><span class="pre">top</span></tt> tool the use of
+resources is more clear and you can see that rcmp_n increase at start time
+of the sub processes (when it launches the service nodes and launchers) and
+then will be the created processes to use the resource if they need them
+no rcmp_n anymore.</p>
+<p>The resource consumption of firos will be minimal, even under heavy
+messages traffic.</p>
+</div>
+<div class="section" id="i-o-flows">
+<h3>I/O flows<a class="headerlink" href="#i-o-flows" title="Permalink to this headline">¶</a></h3>
+<p>The only I/O flows that can concern a user of Robotics should be the user
+access to the web services and the communication between firos and the
+context broker. All the other I/O flows are under VPN and should not be
+a problem.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation &amp; Administration Guide</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#distribution">Distribution</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#package-dependences">Package dependences</a></li>
+<li><a class="reference internal" href="#installation-files">Installation files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li><a class="reference internal" href="#platform-instance-configuration-files">Platform instance configuration files</a></li>
+<li><a class="reference internal" href="#used-ports">Used ports</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uninstallation">Uninstallation</a></li>
+<li><a class="reference internal" href="#sanity-check-procedures">Sanity check procedures</a><ul>
+<li><a class="reference internal" href="#end-to-end-testing">End to End testing</a></li>
+<li><a class="reference internal" href="#list-of-running-processes">List of Running Processes</a></li>
+<li><a class="reference internal" href="#network-interfaces-up-open">Network interfaces Up &amp; Open</a></li>
+<li><a class="reference internal" href="#databases">Databases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#diagnosis-procedures">Diagnosis procedures</a><ul>
+<li><a class="reference internal" href="#resource-availability">Resource availability</a></li>
+<li><a class="reference internal" href="#remote-service-access">Remote Service Access</a></li>
+<li><a class="reference internal" href="#resource-consumption">Resource consumption</a></li>
+<li><a class="reference internal" href="#i-o-flows">I/O flows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="u_and_p_guide.html"
+                        title="previous chapter">User &amp; Programmer Guide</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/i_and_a_guide.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="u_and_p_guide.html" title="User &amp; Programmer Guide"
+             >previous</a> |</li>
+        <li><a href="index.html">Robotics 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, FIWARE-RoboticsGE.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User &amp; Programmer Guide &mdash; Robotics 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Robotics 1.0 documentation" href="index.html" />
+    <link rel="next" title="Installation &amp; Administration Guide" href="i_and_a_guide.html" />
+    <link rel="prev" title="Welcome to Robotics’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="i_and_a_guide.html" title="Installation &amp; Administration Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Robotics’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Robotics 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="user-programmer-guide">
+<h1>User &amp; Programmer Guide<a class="headerlink" href="#user-programmer-guide" title="Permalink to this headline">¶</a></h1>
+<p>This guide tries to show the user how to use Robotics.
+Robotics is composed by two components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">RCM</span></tt> (Robot Clone Manager) the distributed platform which
+manages robots</li>
+<li><tt class="docutils literal"><span class="pre">Firos</span></tt> the bridge which connects robots to the FIWARE world</li>
+</ul>
+</div></blockquote>
+<p>This is important to remember because a user of Robotics can be from one of the
+two worlds, the robot world managed by RCM and the fiware world accessed and
+linked through firos.</p>
+<div class="section" id="enable-the-platform">
+<h2>Enable the platform<a class="headerlink" href="#enable-the-platform" title="Permalink to this headline">¶</a></h2>
+<p>The first thing to explain is how to enable the platform. A machine become
+the platform when you install the main rcm platform agent, i.e. the rcm master (look
+at the <a class="reference internal" href="i_and_a_guide.html"><em>Installation &amp; Administration Guide</em></a> to see how to
+do that).
+Being the platform means that this machine (or master, as we call it) will be the
+center of all the user will create in its robotic world: we are speaking of
+simulated robots for now because we still don&#8217;t have added physical robot in
+that world but can be physical robot or machines that works as robots in the
+platform; machines working as robots only means that you run the rcm robot
+agent into them: in any case we&#8217;ll see later how to <a class="reference internal" href="#add-robot-to-the-platform">add robot to the platform</a>.
+At this point the platform is enabled and you can see that calling the web
+services exposed by the master:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master
+</pre></div>
+</div>
+<p>The response is a simple html page remembering that rcm is responding and so
+is up and running.
+The web server runs only in the master so you can check only the master
+installation in this way, but you know that a minimal configuration of the
+platform is available.
+You can have a look at what you have in your platform contacting platform_instance
+and see that your platform doesn&#8217;t have robot for now:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master/platform_instance/read
+</pre></div>
+</div>
+<p>The response is a json formatted response with the list of robots available
+in the platform so you have an empty list for now.</p>
+</div>
+<div class="section" id="add-robots">
+<span id="add-robot-to-the-platform"></span><h2>Add robots<a class="headerlink" href="#add-robots" title="Permalink to this headline">¶</a></h2>
+<p>Now that your platform is available you can add the robots: these could be
+physical robots, physical computers or virtual machines, but the important
+thing is that they have to run the rcm robot agent.
+Before that an rcm agent would be recognized by the platform you have to do
+the provisioning of the robot; you have to tell the platform the <tt class="docutils literal"><span class="pre">name</span></tt> of
+your robot and what will be its role, what it can do: we call this
+<tt class="docutils literal"><span class="pre">service</span> <span class="pre">logic</span></tt> (see <a class="reference internal" href="#create-brains">Create brains</a> to better understand the concept
+and how to create a service logic).
+You&#8217;ll provide a new robot calling platform_instance in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;pi_name&quot;:&quot;name_r&quot;,&quot;pi_service_logic&quot;:&quot;name_s_l&quot;}&#39; http://public_ip_master/platform_instance/provisioning
+</pre></div>
+</div>
+<p>You can do this before or after running the machine with the rcm robot
+agent but only when this operation will be done the robot will be available
+on the platform and can be used.
+The name of the robot must be unique because this will be the identifier for
+the robot and all the components generated for that robot; the service logic
+is mandatory too otherwise the provisioning fails.
+The response provides the result of the operation but in any case you can see
+the new platform situation calling platform_instance in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master/platform_instance/read
+</pre></div>
+</div>
+<p>This time you could see the newly added robot in the no more empty list of
+available robots. In this case you can see the state of the rcm robot and
+verify if it&#8217;s up and running:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">connected</span></tt> is true when you switch on your provisioned robot. The
+agent on the robot has contacted the master to advertise its presence
+in the platform and the master agent recognise him as one the the robot
+provisioned by the user</li>
+<li><tt class="docutils literal"><span class="pre">paired</span></tt> is true when the robot is associated with a server (as its
+brain) and its role is defined (the service logic used for the robot
+at provisioning time is running)</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="create-brains">
+<span id="id1"></span><h2>Create brains<a class="headerlink" href="#create-brains" title="Permalink to this headline">¶</a></h2>
+<p>In this section will speak about <tt class="docutils literal"><span class="pre">service</span> <span class="pre">logic</span></tt>, its meaning and how to
+create a new service logic.
+Often the robot is a machine less computationally equipped but that needs
+more power that he has in order to do all what he has to do. The robot is
+associated with an additional brain at the boot time (after the installation
+of the rcm robot agent and the robot provisioning) and and has a role in the
+platform which means what he can do in the platform: this is defined by
+the service logic.
+In terms of robotic world the logic units are tied with the underlying
+<a class="reference external" href="http://wiki.ros.org/">ROS</a> and can be of two types:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Node</span></tt> a process that perform computation and does one of the task
+of what the user want to let the robot do. Every task can involve more
+other nodes as sub task: to find more information about ROS nodes see the
+<a class="reference external" href="http://wiki.ros.org/Nodes">documentation</a>. We define this underlying
+component as <tt class="docutils literal"><span class="pre">service</span> <span class="pre">node</span></tt> and can be accessed in the service logic
+as one of the two types of service items</li>
+<li><tt class="docutils literal"><span class="pre">Launcher</span></tt> a sort of aggregator, something that provide a common
+starting point for nodes in the ROS point of view. We define this as
+<tt class="docutils literal"><span class="pre">service</span> <span class="pre">launcher</span></tt> and can be accessed in the service logic as one of
+the two types of service items</li>
+</ul>
+</div></blockquote>
+<p>The service logic provides a context in which the underlying elements can
+run and live to give the feature or brain the robot needs.
+There are many service items already available through the full installation
+of the underlying layer but are not listed through the platform in the fiware
+version: you can see them looking in the ROS environment or documentation to
+see what the installation deploys into the machine.</p>
+<p>The service logic is composed by 3 parts:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">name</span></tt> the name that identifies the service logic into the platform</li>
+<li><tt class="docutils literal"><span class="pre">context</span></tt> the environment in which the elements of the service logic
+run and live. We call them <tt class="docutils literal"><span class="pre">service</span> <span class="pre">spaces</span></tt> and are a sort of containers
+in which the service items work. This is not configurable but every service
+logic instance and so every robot create and use one service space identified
+by the same name used to identify the rcm robot</li>
+<li><tt class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">service</span> <span class="pre">items</span></tt> the elements that define the behaviour of the
+robot and in terms of ROS point of view what is launched in the service
+logic context</li>
+</ul>
+</div></blockquote>
+<div class="section" id="manage-service-logic">
+<h3>Manage service logic<a class="headerlink" href="#manage-service-logic" title="Permalink to this headline">¶</a></h3>
+<p>There are three operations that can be done on a service logic:</p>
+<blockquote>
+<div><ul class="simple">
+<li>create a new service logic</li>
+<li>delete an old and no more used service logic</li>
+<li>retrieve the set of available service logics</li>
+</ul>
+</div></blockquote>
+<p>You can create a new service logic calling service_logic in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;slg_name&quot;:&quot;name_s&quot;,...}&#39; http://public_ip_master/service_logic/provisioning
+</pre></div>
+</div>
+<p>The important thing to remember in this operation is that you have to provide
+2 of the 3 parts of the service logic we listed before at the end of the section
+<a class="reference internal" href="#create-brains">Create brains</a>.
+The <tt class="docutils literal"><span class="pre">slg_name</span></tt> parameter is mandatory and as we said before identifies the
+service logic in the platform: when you do the provisioning of the robot you have
+to provide this name in <tt class="docutils literal"><span class="pre">pi_service_logic</span></tt> parameter and the platform starts an
+instance of that service logic when the robot is turned on. Starting an instance
+means only that in the context (what we called service space in the previous
+section) will be launched all the nodes and launchers defined for this service
+logic.
+In the provisioning of the service logic you have to provide a complete list
+of items you need so <tt class="docutils literal"><span class="pre">sn_list</span></tt> and <tt class="docutils literal"><span class="pre">sl_list</span></tt> should be added in json format.
+You could have only nodes or only launchers so you can use an empty list for
+the parameter you don&#8217;t use.</p>
+<p><tt class="docutils literal"><span class="pre">sn_list</span></tt> and <tt class="docutils literal"><span class="pre">sl_list</span></tt> stand for service node list and service launcher list.
+All their elements follow the form of their type of element in the underlying layer
+so</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">sn_package</span></tt> and <tt class="docutils literal"><span class="pre">sl_package</span></tt> will be the names of the service node
+(sn) or service launcher (sl) packages, the packages of the ROS nodes
+or launchers</li>
+<li><tt class="docutils literal"><span class="pre">sn_type</span></tt> will be the type of the service node, the name of the
+executable or python script representing the type of the node in ROS</li>
+<li><tt class="docutils literal"><span class="pre">sl_file_launcher</span></tt> will be the file name of the service launcher, the
+name of the scripting file representing the launcher in ROS</li>
+<li><tt class="docutils literal"><span class="pre">sn_name</span></tt> and <tt class="docutils literal"><span class="pre">sl_name</span></tt> will be the names assigned to the service
+node or the service launcher</li>
+<li><tt class="docutils literal"><span class="pre">sn_params</span></tt> will be the parameters passed to the service node or
+launcher</li>
+</ul>
+</div></blockquote>
+<p>The only parameters that are specific to rcm platform are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">sn_side</span></tt> and <tt class="docutils literal"><span class="pre">sl_side</span></tt>: they represent the side where a node or
+a launcher will be run. The meaning of this field is tied to the meaning
+of the context or service space: the service space is a logical container
+which represents the link between two machines, a server and a robot, and
+has a sort of manager or main component that in the underlying ROS is
+called <tt class="docutils literal"><span class="pre">roscore</span></tt>. This component will be on server side by default but
+all the other node and launcher can run on server side or robot side.
+You have to decide where to launch the elements but remember that the
+additional brain and the machine more powerful should be the server and
+should be the preferred side where to launch more resource greedy
+processes</li>
+</ul>
+</div></blockquote>
+<p>The information you pass to the platform is not verified so if you put
+a not existing node into the service logic the result will be that the
+platform will be unable to correctly start the robot using that service logic.
+In any case the result of the service logic provisioning will be OK if the
+syntax of the operation was right so be careful when you create a service
+logic to provide the available items and correct parameters.</p>
+<p>At any moment you can see the service logic that are available in the platform
+and how is composed what you created looking at service_logic in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master/service_logic/read
+~$ curl http://public_ip_master/service_logic/read?slg_name=name_s_l
+</pre></div>
+</div>
+<p>The first give you an overview of the service logic in the platform (those
+created by default and those created by you) and the second give a more
+detailed overview about a specified service logic referred by name.</p>
+<p>The last operation you can do is the deletion of the service logic you created
+if you are not satisfied or you want change something (no changes can be done,
+so if you want add some nodes or change a launcher you used, you have to remove
+the service logic and repeat the provisioning with the same name but with the
+newly designed structure).
+The deletion can be done calling service_logic in the rcm master instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;slg_name&quot;:&quot;name_s&quot;}&#39; http://public_ip_master/service_logic/r_provisioning
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="give-the-brain-a-body">
+<h2>Give the brain a body<a class="headerlink" href="#give-the-brain-a-body" title="Permalink to this headline">¶</a></h2>
+<p>When you finished to design the brain for your robot you have to provide a
+body to that brain and you do that when you do the provisioning of the
+robot. All that you set to run in the service logic will be launched where you
+asked when the robot is switched on after the robot provisioning.
+You can check if all went well looking at platform_instance in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl http://public_ip_master/platform_instance/read
+</pre></div>
+</div>
+<p>The service logic was good and the provisioning went well if the <tt class="docutils literal"><span class="pre">paired</span></tt>
+field becomes true. This change of state require some time so wait before considering
+the operation a failure.
+Even in the case of robot as it happens in service logic case, if you want to
+change something about the robot you have to remove the robot and provide
+again with the new values. If you change the name you have to change the name
+in the configuration file of the rcm robot to match the name you newly provide.
+In order to remove the robot you can call platform_instance in the rcm master
+instance:</p>
+<div class="highlight-python"><div class="highlight"><pre>~$ curl -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;pi_name&quot;:&quot;name_r&quot;}&#39; http://public_ip_master/platform_instance/r_provisioning
+</pre></div>
+</div>
+</div>
+<div class="section" id="connecting-to-the-fiware-world">
+<h2>Connecting to the Fiware world<a class="headerlink" href="#connecting-to-the-fiware-world" title="Permalink to this headline">¶</a></h2>
+<p>In order to understand and provide the connection to the fiware world you
+have to know that this link is done through firos and you need to put that
+part in your custom service logic to do it.
+During the master installation the wizard ask you if you want
+to enter the fiware world and install the firos package (see
+<a class="reference internal" href="i_and_a_guide.html"><em>Installation &amp; Administration Guide</em></a>). If you require
+that, firos, rcm_driver and robotics_msgs will be deployed in the ROS
+workspace used by the rcm platform to run the underlying nodes and launchers.
+You can see those 3 elements as service nodes needed to exchange information
+between the robotic world and fiware world.
+Rcm platform speaks to rcm_driver to tell firos what&#8217;s happening in the
+rcm platform and firos communicates those information to the fiware context
+broker. Rcm_driver speaks to firos in the ROS environment using the language
+specified in robotics_msgs.
+All this explanation is intended to let you know that if you want to connect
+with fiware in your custom made service logic you have to put those 3 nodes
+in it. Moreover those 3 service nodes are deployed in the master and are
+available only there, so when you create your service logic you must tell it
+to run them on the server side.
+If you do that when you turn on your robots they are notified in fiware
+world and and an entity of each robot will be automatically available there.</p>
+</div>
+<div class="section" id="robots-in-context-broker">
+<h2>Robots in context broker<a class="headerlink" href="#robots-in-context-broker" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Firos will perform a mapping between ROS and context broker following these rules:</dt>
+<dd><ul class="first last simple">
+<li>Each robot will be an entity, its type will be ROBOT and its id the name of the robot.</li>
+<li>The topics from the robot will be translated into attributes, its type will be
+the type of the topic and the name will be a slightly modified version of the
+name of the topic.</li>
+<li>Each topic will have a timestamp named firostimestamp.</li>
+<li>If you want to send a command from context broker to a robot, you must list the
+name of the attribute to be sent into the value of the attribute COMMAND (type COMMAND).</li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;COMMAND&quot;</span><span class="p">,</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;COMMAND&quot;</span><span class="p">,</span>
+    <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">&quot;pose&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="firos-whitelist">
+<h3>Firos whitelist<a class="headerlink" href="#firos-whitelist" title="Permalink to this headline">¶</a></h3>
+<p>Firos selects which topics will be mapped into context broker throught its whitelist, which
+can be configured in the whitelist.json file. This file has the following format:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;name_of_the_robot&quot;: {
+    &quot;publisher&quot;: [&quot;list_of_topics_to_be_received_from_context_broker&quot;],
+    &quot;subscriber&quot;: [&quot;list_of_topics_to_be_sent_to_context_broker&quot;],
+}
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;turtle\\w+&quot;: {
+    &quot;publisher&quot;: [&quot;cmd_vel&quot;],
+    &quot;subscriber&quot;: [&quot;pose&quot;]
+},
+&quot;robot\\w+&quot;: {
+    &quot;publisher&quot;: [&quot;cmd_vel.*teleop&quot;, &quot;.*move_base/goal&quot;, &quot;.*move_base/cancel&quot;],
+    &quot;subscriber&quot;: [&quot;.*move_base/result&quot;]
+}
+</pre></div>
+</div>
+<p>Both the name of the robot and the name of the topics can be regular expresions.</p>
+</div>
+<div class="section" id="robots-descriptions">
+<h3>Robots descriptions<a class="headerlink" href="#robots-descriptions" title="Permalink to this headline">¶</a></h3>
+<p>Robots may have some public files so users can understand some characteristics or even
+use their devices. All the references contained in this file can be published on the
+context broker; to do so, just configure the robotdescriptions.json file following this example:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;turtle1&quot;: {
+    &quot;descriptions&quot;: [
+        &quot;http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch&quot;,
+        &quot;http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes&quot;
+    ]
+}
+</pre></div>
+</div>
+<p>This data will be inserted in the entity as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;DescriptionData&quot;</span><span class="p">,</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;descriptions&quot;</span><span class="p">,</span>
+    <span class="s">&quot;value&quot;</span><span class="p">:</span> <span class="s">&quot;http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch||http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes&quot;</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User &amp; Programmer Guide</a><ul>
+<li><a class="reference internal" href="#enable-the-platform">Enable the platform</a></li>
+<li><a class="reference internal" href="#add-robots">Add robots</a></li>
+<li><a class="reference internal" href="#create-brains">Create brains</a><ul>
+<li><a class="reference internal" href="#manage-service-logic">Manage service logic</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#give-the-brain-a-body">Give the brain a body</a></li>
+<li><a class="reference internal" href="#connecting-to-the-fiware-world">Connecting to the Fiware world</a></li>
+<li><a class="reference internal" href="#robots-in-context-broker">Robots in context broker</a><ul>
+<li><a class="reference internal" href="#firos-whitelist">Firos whitelist</a></li>
+<li><a class="reference internal" href="#robots-descriptions">Robots descriptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Robotics&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="i_and_a_guide.html"
+                        title="next chapter">Installation &amp; Administration Guide</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/u_and_p_guide.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="i_and_a_guide.html" title="Installation &amp; Administration Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Robotics’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Robotics 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, FIWARE-RoboticsGE.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
