@@ -36,8 +36,8 @@ packages.
 
 ## Install and run
 
-Install documentation for Robotics can be found at [the Installation and Administration Guide](docs/i_and_a_guide.rst).
-How to run Robotics can be found at [the Installation and Administration Guide](docs/i_and_a_guide.rst).
+Install documentation for Robotics can be found at [the Installation and Administration Guide](../docs/i_and_a_guide.rst).
+How to run Robotics can be found at [the Installation and Administration Guide](../docs/i_and_a_guide.rst).
 
 [Top](#top)
 
