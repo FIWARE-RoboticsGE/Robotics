@@ -44,14 +44,16 @@ How to run Robotics can be found at [the Installation and Administration Guide](
 
 [Top](#top)
 
+## Testing
+
+How to run end-to-end tests can be found at [the Installation and Administration Guide](docs/i_and_a_guide.rst#user-content-end-to-end-testing)
+
 ## Advanced topics
 
 * [User and Programmer's Guide](docs/u_and_p_guide.rst)
 * [Installation and Administration Guide](docs/i_and_a_guide.rst)
-<!--
 * Container-based deployment
   * [Docker](docker/README.md)
--->
 
 [Top](#top)
 
