@@ -1,0 +1,2642 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Robotics Data API (RDAPI) v1 Specification</title>
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/idea.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" type="text/css" href="css/api-specification.css"> 
+
+    
+</head>
+<body id="respecDocument" class="h-entry">
+<div class="container">
+  <div id="TOC-container">
+    
+<section id="toc">
+
+        <div id="fiware-logo"></div>
+    <ul class="toc">
+
+
+    
+    
+
+    
+    
+    <li>
+        
+        <a href="#specification" title = "Specification" > Specification </a>
+        
+    <ul class="toc">
+    
+    
+        <li class="tocline"> <a href="#introduction" title = "Introduction"> Introduction </a>
+
+    
+</li>
+    
+    
+   
+
+
+
+    
+
+
+ </ul>
+</li>
+
+
+
+
+
+
+<li><a href="#API_specification">API Specification</a>
+    <ul class="toc">
+    
+
+                        <li>
+                            
+                                <a href="#resource_group_service-logics" title = "Group Service Logics">Group Service Logics</a>
+                            
+                            <ul class="toc">
+                              
+                                
+                                    <li>
+                                        <a href="#resource_read-service-logics" title = "Resource Read service logics">Resource Read service logics</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_read-service-logics" title ="GET - Read Service Logics">GET - Read Service Logics</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_read-service-logic-information" title = "Resource Read service logic information">Resource Read service logic information</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_read-service-logic-information" title ="GET - Read Service Logic Information">GET - Read Service Logic Information</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    
+                                        
+                                            <li><a href="#action_provisioning-a-service-logic" title = "POST - Provisioning a service logic">POST - Provisioning a service logic aaaaaa</a></li>
+                                        
+                                        
+                                    
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_unprovisioning-a-service-logic" title = "Resource Unprovisioning a service logic">Resource Unprovisioning a service logic</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_rollback-provisioning-a-service-logic" title ="POST - Rollback Provisioning a service logic">POST - Rollback Provisioning a service logic</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                            </ul>
+                        </li>
+                      
+
+                        <li>
+                            
+                                <a href="#resource_group_platform-instances" title = "Group Platform Instances">Group Platform Instances</a>
+                            
+                            <ul class="toc">
+                              
+                                
+                                    <li>
+                                        <a href="#resource_read-robot-instances" title = "Resource Read robot instances">Resource Read robot instances</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_read-robot-instances" title ="GET - Read Robot Instances">GET - Read Robot Instances</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_provisioning-a-robot" title = "Resource Provisioning a robot">Resource Provisioning a robot</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_provisioning-a-robot" title ="POST - Provisioning a Robot">POST - Provisioning a Robot</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_unprovisioning-a-robot" title = "Resource Unprovisioning a robot">Resource Unprovisioning a robot</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_rollback-provisioning-a-robot" title ="POST - Rollback Provisioning a robot">POST - Rollback Provisioning a robot</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                            </ul>
+                        </li>
+                      
+
+                        <li>
+                            
+                                <a href="#resource_group_service-spaces" title = "Group Service Spaces">Group Service Spaces</a>
+                            
+                            <ul class="toc">
+                              
+                                
+                                    <li>
+                                        <a href="#resource_read-service-space" title = "Resource Read service space">Resource Read service space</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_read-service-space" title ="GET - Read Service Space">GET - Read Service Space</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                            </ul>
+                        </li>
+                      
+    <li><a href="#examples">Examples</a></li>
+    </ul>
+</li>
+    
+    
+    
+    
+    
+        <li class="tocline"> <a href="#acknowledgements" title = "Acknowledgements"> Acknowledgements </a>
+
+    
+</li>
+    
+    
+    
+    
+    
+    
+    
+        <li><a href="#references">References</a></li>
+    
+   </ul>
+</section>
+
+  </div>
+  <div id="API-content">
+  
+	
+
+	
+		<h1>Robotics Data API v1 Specification </h1>
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+		<span class="dateLabel">DATE:</span> <span class="dateValue"> 30 July 2015 </span>
+	
+
+	
+
+	
+
+
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+		<h2 id="editors">Editors</h2>
+		<ul>
+<li>Davide Colombatto, Telecom Italia</li>
+<li>Roberto Antonini, Telecom Italia</li>
+<li>Fabio Giuseppe Di Benedetto, Consoft Sistemi</li>
+</ul>
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+		<h2 id="copyright">Copyright</h2>
+		<p>Copyright © 2015 by Telecom Italia, Consoft Sistemi</p>
+	
+
+
+<hr>
+
+
+	<h2 id="abstract">Abstract</h2>
+	<p>RDAPI is a set of REST APIs (which return JSON responses) allowing FIWARE developers to integrate robotic services to IoT ones in a simple way.</p>
+
+
+
+
+	
+
+	
+
+	
+		<h2 id="status">Status of this document</h2>
+		<p>This is a work in progress and is changing on a daily basis. 
+First major release 4 will be released by the end of September 2015 </p>
+<p>This specification is licensed under the <a href="http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29">FIWARE Open Specification License</a>.</p>
+	
+
+	
+
+<hr>
+
+    
+    
+
+
+
+
+		
+	
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+
+
+
+
+	
+		
+	
+		
+	
+		
+	
+		
+	
+
+
+		
+            <section>
+			    <h1 id="specification">Specification</h1>
+			     
+            </section>
+		
+	
+	
+		
+		  	<section>
+				<h2 id="introduction"> Introduction</h2>
+<p>The resources abstracted by RDAPI and needed by FIWARE are described below.</p>
+
+
+			</section>
+		
+	
+
+
+
+
+
+	
+		
+	
+
+
+
+    
+
+  
+  <section id="API_specification">
+      <h1>API Specification</h1>
+      
+
+
+
+
+        
+            <section id="resource_group_service-logics" class="resourceGroup">
+            <h2 id="h-resource_group_service-logics">Service Logics</h2>
+        
+	<p>A service logic identifies the set of ROS functions (i.e. ROS nodes and/or launchers) needed to perform a specific service, like e.g. "assisted teleoperation" or "path planning".
+For each ROS function is also indicated where it has to be started (Server o Robot side).</p>
+        
+            <section id="resource_read-service-logics" class="resource">
+                 <div class= "header" ><h3 id="h-resource_read-service-logics">Read service logics [/service_logic/read]</h3> </div>
+                <p>Returns the list of provisioned service logics.</p>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested information can be returned, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: if result is <em>OK</em> - an array of provisioned service logics, for each element:</p>
+<ul>
+<li><strong>slg_name</strong>: name of the service logic</li>
+</ul>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_read-service-logics" class="action GET">
+                        
+
+                        
+    <h4 id="h-action_read-service-logics">
+        Read Service Logics -
+        GET
+        
+            /service_logic/read
+        
+    </h4>
+
+        
+                            <div id="read-service-logics_body" class="">
+                                
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_read-service-logics_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/service-logics/read-service-logics/read-service-logics">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_read-service-logic-information" class="resource">
+                 <div class= "header" ><h3 id="h-resource_read-service-logic-information">Read service logic information [/service_logic/read?slg_name={slg_name_value}]</h3> </div>
+                <p>Returns the list of ROS nodes and/or launchers associated to the service logic.</p>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if response can be returned, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: if result is <em>OK</em> - an object containing:</p>
+<ul>
+<li><strong>ss_side</strong>: the side of the head of the Service Space to create (S: Server-side, R: Robot-side)</li>
+<li><strong>sn_list</strong>: list of ROS nodes to start, for each element:<ul>
+<li><strong>sn_package</strong>: the ROS node package</li>
+<li><strong>sn_type</strong>: the ROS node type</li>
+<li><strong>sn_side</strong>: the side where to start the ROS node (S: Server-side, R: Robot-side)</li>
+<li><strong>sn_name</strong>: the name to use to start the ROS node</li>
+<li><strong>sn_params</strong>: the ROS node parameters</li>
+</ul>
+</li>
+<li><strong>sl_list</strong>: list of ROS launchers to start, for each element:<ul>
+<li><strong>sl_package</strong>: the ROS launcher package</li>
+<li><strong>sl_file_launcher</strong>: the ROS launcher file</li>
+<li><strong>sl_side</strong>: the side where to start the ROS launcher (S: Server-side, R: Robot-side)</li>
+<li><strong>sl_name</strong>: the name to use to start the ROS launcher</li>
+<li><strong>sl_params</strong>: the ROS launcher parameters  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_read-service-logic-information" class="action GET">
+                        
+
+                        
+    <h4 id="h-action_read-service-logic-information">
+        Read Service Logic Information -
+        GET
+        
+            /service_logic/read?slg_name={slg_name_value}
+        
+    </h4>
+
+        
+                            <div id="read-service-logic-information_body" class="">
+                                <p>This action allows you to read the indicated service logic information.</p>
+                                
+                                
+                                
+
+	<span class="parameters-title">Parameters</span>
+	<dl>
+		
+			<dt>
+				slg_name_value (Required)
+			</dt>
+			<dd>
+				
+				
+			</dd>
+		
+	</dl>
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_read-service-logic-information_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/service-logics/read-service-logic-information/read-service-logic-information">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_provisioning-a-service-logic" class="resource">
+                 <div class= "header" ><h3 id="h-resource_provisioning-a-service-logic">Provisioning a service logic [/service_logic/provisioning]</h3> </div>
+                <p>Before using a service logic, it has to be inserted into the platform by using the provisioning API.</p>
+<p>The following is the request structure:</p>
+<ul>
+<li>
+<p><strong>slg_name</strong>: name of the service logic to provide</p>
+</li>
+<li>
+<p><strong>sn_list</strong>: list of ROS nodes to start, for each element:</p>
+<ul>
+<li><strong>sn_package</strong>: the ROS node package</li>
+<li><strong>sn_type</strong>: the ROS node type</li>
+<li><strong>sn_name</strong>: the name to use to start the ROS node</li>
+<li><strong>sn_params</strong>: the ROS node parameters</li>
+<li><strong>sn_side</strong>: the side where to start the ROS node (S: Server-side, R: Robot-side)</li>
+</ul>
+</li>
+<li>
+<p><strong>sl_list</strong>: list of ROS launchers to start, for each element:</p>
+<ul>
+<li><strong>sl_package</strong>: the ROS launcher package</li>
+<li><strong>sl_file_launcher</strong>: the ROS launcher file</li>
+<li><strong>sl_name</strong>: the name to use to start the ROS launcher</li>
+<li><strong>sl_params</strong>: the ROS launcher parameters</li>
+<li><strong>sl_side</strong>: the side where to start the ROS launcher (S: Server-side, R: Robot-side)</li>
+</ul>
+</li>
+</ul>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested action can be executed, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: additional information</p>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_provisioning-a-service-logic" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_provisioning-a-service-logic">
+        Provisioning a service logic -
+        POST
+        
+            /service_logic/provisioning
+        
+    </h4>
+
+        
+                            <div id="provisioning-a-service-logic_body" class="">
+                                <p>You may provide your own service logic into platform using this action. It takes a JSON
+object containing the unique name of the service logic and two list related to the ROS nodes and ROS launchers associated to the service logic.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_provisioning-a-service-logic_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/service-logics/provisioning-a-service-logic/provisioning-a-service-logic">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_unprovisioning-a-service-logic" class="resource">
+                 <div class= "header" ><h3 id="h-resource_unprovisioning-a-service-logic">Unprovisioning a service logic [/service_logic/r_provisioning]</h3> </div>
+                <p>If a service logic is no longer used, it can be deleted from platform by using the rollback provisioning API.</p>
+<p>The following is the request structure:</p>
+<ul>
+<li><strong>slg_name</strong>: name of the service logic to unprovide</li>
+</ul>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested action can be executed, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: additional information</p>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_rollback-provisioning-a-service-logic" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_rollback-provisioning-a-service-logic">
+        Rollback Provisioning a service logic -
+        POST
+        
+            /service_logic/r_provisioning
+        
+    </h4>
+
+        
+                            <div id="rollback-provisioning-a-service-logic_body" class="">
+                                <p>You may remove your own service logic from platform using this action. It takes a JSON
+object containing the unique name of the service logic.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_rollback-provisioning-a-service-logic_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/service-logics/unprovisioning-a-service-logic/rollback-provisioning-a-service-logic">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+    </section>
+
+        
+            <section id="resource_group_platform-instances" class="resourceGroup">
+            <h2 id="h-resource_group_platform-instances">Platform Instances</h2>
+        
+	<p>The MASTER instance and the set of Robot instances provisioned in the platform.</p>
+        
+            <section id="resource_read-robot-instances" class="resource">
+                 <div class= "header" ><h3 id="h-resource_read-robot-instances">Read robot instances [/platform_instance/read]</h3> </div>
+                <p>Returns the list of provisioned Robot instances.</p>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested information can be returned, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: if result is <em>OK</em> - an array of provisioned Robot instances, for each element:</p>
+<ul>
+<li><strong>pi_name</strong>: name of the Robot instance</li>
+<li><strong>service_logic</strong>: name of the service logic associated with the robot</li>
+<li><strong>connected</strong>: <em>true</em> if the robot is connected to the platform, <em>false</em> otherwise</li>
+<li><strong>paired</strong>: <em>true</em> if the robot is associated to a server (MASTER) and the related service logic is started, <em>false</em> otherwise</li>
+</ul>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_read-robot-instances" class="action GET">
+                        
+
+                        
+    <h4 id="h-action_read-robot-instances">
+        Read Robot Instances -
+        GET
+        
+            /platform_instance/read
+        
+    </h4>
+
+        
+                            <div id="read-robot-instances_body" class="">
+                                
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_read-robot-instances_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/platform-instances/read-robot-instances/read-robot-instances">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_provisioning-a-robot" class="resource">
+                 <div class= "header" ><h3 id="h-resource_provisioning-a-robot">Provisioning a robot [/platform_instance/provisioning]</h3> </div>
+                <p>Before using a robot, the related Robot instance has to be inserted into the platform by using the provisioning API.</p>
+<p>The following is the request structure:</p>
+<ul>
+<li>
+<p><strong>pi_name</strong>: name of the Robot instance to provide</p>
+</li>
+<li>
+<p><strong>pi_service_logic</strong>: name of the service logic to associate with the robot</p>
+</li>
+</ul>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested action can be executed, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: additional information</p>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_provisioning-a-robot" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_provisioning-a-robot">
+        Provisioning a Robot -
+        POST
+        
+            /platform_instance/provisioning
+        
+    </h4>
+
+        
+                            <div id="provisioning-a-robot_body" class="">
+                                <p>You may provide your own robot into platform using this action. It takes a JSON
+object containing the unique name of the Robot instance and the name of the associated service logic.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_provisioning-a-robot_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/platform-instances/provisioning-a-robot/provisioning-a-robot">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_unprovisioning-a-robot" class="resource">
+                 <div class= "header" ><h3 id="h-resource_unprovisioning-a-robot">Unprovisioning a robot [/platform_instance/r_provisioning]</h3> </div>
+                <p>If a robot is no longer used, the related Robot instance can be deleted from platform by using the rollback provisioning API.</p>
+<p>The following is the request structure:</p>
+<ul>
+<li><strong>pi_name</strong>: name of the Robot instance to unprovide</li>
+</ul>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if the requested action can be executed, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: additional information</p>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_rollback-provisioning-a-robot" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_rollback-provisioning-a-robot">
+        Rollback Provisioning a robot -
+        POST
+        
+            /platform_instance/r_provisioning
+        
+    </h4>
+
+        
+                            <div id="rollback-provisioning-a-robot_body" class="">
+                                <p>You may remove your own robot from platform using this action. It takes a JSON
+object containing the unique name of the robot instance.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_rollback-provisioning-a-robot_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/platform-instances/unprovisioning-a-robot/rollback-provisioning-a-robot">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+    </section>
+
+        
+            <section id="resource_group_service-spaces" class="resourceGroup">
+            <h2 id="h-resource_group_service-spaces">Service Spaces</h2>
+        
+	<p>A Service Space (also called "Robot Clone") is a ROS container hosting the service logic associated to a provisioned Robot instance.</p>
+<p>It has a unique name within the platform (i.e. the same name of the managed robot) and traverses two platform instances:</p>
+<ul>
+<li>
+<p>Server-side (i.e. the "remote brain"), which is the MASTER instance</p>
+</li>
+<li>
+<p>Robot-side (i.e. the "local brain"), which is a Robot instance: a real robot, a simulated robot or a gateway which manages a real robot </p>
+</li>
+</ul>
+<p>Each Service Space is: </p>
+<ul>
+<li>
+<p>Automatically created by the platform when the related robot connects to it and automatically deleted when the robot disconnects to it.</p>
+</li>
+<li>
+<p>After the creation, the service logic associated to the related robot is started and it is stopped before the deletion</p>
+</li>
+</ul>
+        
+            <section id="resource_read-service-space" class="resource">
+                 <div class= "header" ><h3 id="h-resource_read-service-space">Read service space [/service_space/read?ss_name={ss_name_value}]</h3> </div>
+                <p>Returns the list of ROS nodes and/or launchers that are started in the Service Space and information related to FIROS to be reachable by the Context Broker.</p>
+<p>The following is the response structure:</p>
+<ul>
+<li>
+<p><strong>result</strong>: <em>OK</em> if response can be returned, otherwise <em>ERROR</em> with motivation in the reason field.</p>
+</li>
+<li>
+<p><strong>reason</strong>: if result is <em>OK</em> - an object containing:</p>
+<ul>
+<li><strong>r_nodes</strong>: list of ROS nodes started, for each element:<ul>
+<li><strong>sn_package</strong>: the ROS node package</li>
+<li><strong>sn_type</strong>: the ROS node type</li>
+<li><strong>sn_name</strong>: the ROS node name</li>
+<li><strong>i_name</strong>: the instance's name where the ROS node is started</li>
+</ul>
+</li>
+<li><strong>r_launchers</strong>: list of ROS launchers started, for each element:<ul>
+<li><strong>sl_package</strong>: the ROS launcher package</li>
+<li><strong>sl_file_launcher</strong>: the ROS launcher file</li>
+<li><strong>sl_name</strong>: the ROS launcher name</li>
+<li><strong>associated_r_nodes</strong>: the array of ROS nodes belonging to the launcher</li>
+<li><strong>i_name</strong>: the instance's name where the ROS launcher is started     </li>
+</ul>
+</li>
+<li><strong>public_ip</strong>: the public IP of the MASTER</li>
+<li><strong>inbound_port</strong>: the inbound port which will be used by the Context Broker </li>
+</ul>
+</li>
+</ul>
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_read-service-space" class="action GET">
+                        
+
+                        
+    <h4 id="h-action_read-service-space">
+        Read Service Space -
+        GET
+        
+            /service_space/read?ss_name={ss_name_value}
+        
+    </h4>
+
+        
+                            <div id="read-service-space_body" class="">
+                                <p>This action allows you to read the indicated Service Space.</p>
+                                
+                                
+                                
+
+	<span class="parameters-title">Parameters</span>
+	<dl>
+		
+			<dt>
+				ss_name_value (Required)
+			</dt>
+			<dd>
+				
+				
+			</dd>
+		
+	</dl>
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_read-service-space_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.rdapi.apiary.io/#reference/service-spaces/read-service-space/read-service-space">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+    </section>
+
+<section id="examples">
+    <div class= "header" ><h2>Examples</h2> </div>
+    
+        
+            <section id="resource_group_service-logics_example" class="resourceGroupExample">
+                <div class= "header" ><h3 id="h-resource_group_service-logics_example">Service Logics</h3> </div>
+        
+
+                
+                    <section id="resource_read-service-logics_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_read-service-logics_example">Read service logics [/service_logic/read]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_read-service-logics_examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_read-service-logics_examples">
+        Read Service Logics -
+        GET
+        
+            /service_logic/read
+        
+    </h4>
+
+                
+                                    <div id="action_read-service-logics_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_read-service-logics_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": [
+        {
+            "slg_name": "service_logic1",
+        },
+        {
+            "slg_name": "service_logic2",
+        }                
+    ]
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_read-service-logics">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_read-service-logic-information_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_read-service-logic-information_example">Read service logic information [/service_logic/read?slg_name={slg_name_value}]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_read-service-logic-information_examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_read-service-logic-information_examples">
+        Read Service Logic Information -
+        GET
+        
+            /service_logic/read?slg_name={slg_name_value}
+        
+    </h4>
+
+                
+                                    <div id="action_read-service-logic-information_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+
+	<span class="parameters-title">Parameters</span>
+	<dl>
+		
+			<dt>
+				slg_name_value (Required)
+			</dt>
+			<dd>
+				
+				
+			</dd>
+		
+	</dl>
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_read-service-logic-information_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": {
+        "ss_side": "S",
+        "sn_list":
+            [
+                {
+                    "sn_package": "node1_pkg",
+                    "sn_type": "node1_type",
+                    "sn_side": "S",
+                    "sn_name": "node1_name",
+                    "sn_params": "node1_params"
+                },
+                ...,
+                {
+                    "sn_package": "driver1_pkg",
+                    "sn_type": "driver1_type",
+                    "sn_side": "R",
+                    "sn_name": "driver1_name",
+                    "sn_params": "driver1_params"
+                }
+            ],
+        "sl_list":
+            [
+                {
+                    "sl_package": "launcher1_pkg",
+                    "sl_file_launcher": "launcher1_file",
+                    "sl_side": "S",
+                    "sl_name": "launcher1_name",
+                    "sl_params": "launcher1_params"
+                }
+            ]
+    }
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_read-service-logic-information">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_provisioning-a-service-logic_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_provisioning-a-service-logic_example">Provisioning a service logic [/service_logic/provisioning]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_provisioning-a-service-logic_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_provisioning-a-service-logic_examples">
+        Provisioning a service logic -
+        POST
+        
+            /service_logic/provisioning
+        
+    </h4>
+
+                
+                                    <div id="action_provisioning-a-service-logic_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_provisioning-a-service-logic_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "slg_name": "service_logic1",
+    "sn_list":
+        [
+            {
+                "sn_package": "node1_pkg",
+                "sn_type": "node1_type",
+                "sn_name": "node1_name",
+                "sn_params": "node1_params",
+                "sn_side": "S"
+            },
+            ...,
+            {
+                "sn_package": "driver1_pkg",
+                "sn_type": "driver1_type",
+                "sn_name": "driver1_name",
+                "sn_params": "driver1_params",
+                "sn_side": "R"
+            }
+        ],
+    "sl_list":
+        [
+            {
+                "sl_package": "launcher1_pkg",
+                "sl_file_launcher": "launcher1_file",
+                "sl_name": "launcher1_name",
+                "sl_params": "launcher1_params",
+                "sl_side": "S"
+            }
+        ]
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_provisioning-a-service-logic_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": "The service logic with name 'service_logic1' has been provisioned correctly"
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_provisioning-a-service-logic">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_unprovisioning-a-service-logic_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_unprovisioning-a-service-logic_example">Unprovisioning a service logic [/service_logic/r_provisioning]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_rollback-provisioning-a-service-logic_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_rollback-provisioning-a-service-logic_examples">
+        Rollback Provisioning a service logic -
+        POST
+        
+            /service_logic/r_provisioning
+        
+    </h4>
+
+                
+                                    <div id="action_rollback-provisioning-a-service-logic_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_rollback-provisioning-a-service-logic_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "slg_name": "service_logic1",
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_rollback-provisioning-a-service-logic_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK"
+    "reason": "The provisioning of the service logic with name 'service_logic1' has been rolled back completely",
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_rollback-provisioning-a-service-logic">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+        </section>
+    
+        
+            <section id="resource_group_platform-instances_example" class="resourceGroupExample">
+                <div class= "header" ><h3 id="h-resource_group_platform-instances_example">Platform Instances</h3> </div>
+        
+
+                
+                    <section id="resource_read-robot-instances_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_read-robot-instances_example">Read robot instances [/platform_instance/read]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_read-robot-instances_examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_read-robot-instances_examples">
+        Read Robot Instances -
+        GET
+        
+            /platform_instance/read
+        
+    </h4>
+
+                
+                                    <div id="action_read-robot-instances_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_read-robot-instances_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": [
+        {
+            "pi_name": "robot1",
+            "service_logic": "service_logic1",
+            "connected": true,
+            "paired": true
+        }
+    ]
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_read-robot-instances">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_provisioning-a-robot_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_provisioning-a-robot_example">Provisioning a robot [/platform_instance/provisioning]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_provisioning-a-robot_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_provisioning-a-robot_examples">
+        Provisioning a Robot -
+        POST
+        
+            /platform_instance/provisioning
+        
+    </h4>
+
+                
+                                    <div id="action_provisioning-a-robot_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_provisioning-a-robot_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "pi_name": "robot1",
+    "pi_service_logic": "service_logic1"
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_provisioning-a-robot_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": "The platform node instance with name 'robot1' has been provisioned correctly"
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_provisioning-a-robot">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_unprovisioning-a-robot_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_unprovisioning-a-robot_example">Unprovisioning a robot [/platform_instance/r_provisioning]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_rollback-provisioning-a-robot_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_rollback-provisioning-a-robot_examples">
+        Rollback Provisioning a robot -
+        POST
+        
+            /platform_instance/r_provisioning
+        
+    </h4>
+
+                
+                                    <div id="action_rollback-provisioning-a-robot_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_rollback-provisioning-a-robot_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "pi_name": "robot1",
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_rollback-provisioning-a-robot_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK"
+    "reason": "The provisioning of the platform node instance with name 'robot1' has been rolled back completely",
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_rollback-provisioning-a-robot">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+        </section>
+    
+        
+            <section id="resource_group_service-spaces_example" class="resourceGroupExample">
+                <div class= "header" ><h3 id="h-resource_group_service-spaces_example">Service Spaces</h3> </div>
+        
+
+                
+                    <section id="resource_read-service-space_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_read-service-space_example">Read service space [/service_space/read?ss_name={ss_name_value}]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_read-service-space_examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_read-service-space_examples">
+        Read Service Space -
+        GET
+        
+            /service_space/read?ss_name={ss_name_value}
+        
+    </h4>
+
+                
+                                    <div id="action_read-service-space_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+
+	<span class="parameters-title">Parameters</span>
+	<dl>
+		
+			<dt>
+				ss_name_value (Required)
+			</dt>
+			<dd>
+				
+				
+			</dd>
+		
+	</dl>
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_read-service-space_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "result": "OK",
+    "reason": {
+        "r_nodes":
+            [
+                {
+                    "sn_package": "node1_pkg",
+                    "sn_type": "node1_type",
+                    "sn_name": "node1_name",
+                    "i_name": "master"
+                },
+                ...,
+                {
+                    "sn_package": "driver1_pkg",
+                    "sn_type": "driver1_type",
+                    "sn_name": "driver1_name",
+                    "i_name": "robot1"
+                }
+            ],
+        "r_launchers":
+            [
+                {
+                    "sl_package": "launcher1_pkg",
+                    "sl_file_launcher": "launcher1_file",
+                    "sl_name": "launcher1_name", 
+                    "associated_r_nodes": ["node1", ..., "nodeN"],
+                    "i_name": "master"
+                }
+            ],
+        "inbound_port": "10100",
+        "public_ip": "..."
+    }
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_read-service-space">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+        </section>
+    
+
+
+
+</section>
+  </section>
+  
+   
+
+
+
+	
+
+	
+	  	<section>
+			<h1 id="acknowledgements"> Acknowledgements</h1>
+<p>The editors would like to express their gratitude to the following people who actively contributed to this specification:
+Gianmario Bollano, Pierangelo Garino</p>
+
+
+		</section>
+	
+
+	
+
+	
+
+    
+    
+    
+      <section id="references">
+      <h1>References</h1>
+          <ul>
+              
+                  <li><a href="http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29">FIWARE Open Specification License</a></li>
+              
+          </ul>
+      </section>
+    
+  </div>
+</div>
+</body>
+</html>

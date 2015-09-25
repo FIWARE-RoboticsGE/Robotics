@@ -1,0 +1,1937 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FIROS Config API Specification</title>
+    <link href="css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/idea.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <link rel="stylesheet" type="text/css" href="css/api-specification.css"> 
+
+    
+</head>
+<body id="respecDocument" class="h-entry">
+<div class="container">
+  <div id="TOC-container">
+    
+<section id="toc">
+
+        <div id="fiware-logo"></div>
+    <ul class="toc">
+
+
+    
+    
+
+
+
+
+
+<li><a href="#API_specification">API Specification</a>
+    <ul class="toc">
+    
+
+                        <li>
+                            
+                                <a href="#default_group" title = "Group default">Default</a>
+                            
+                            <ul class="toc">
+                              
+                                
+                                    <li>
+                                        <a href="#resource_get-robots" title = "Resource Get Robots">Resource Get Robots</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_get-robots-handled-by-firos-with-their-corresponding-topics." title ="GET - Get robots handled by FIROS with their corresponding topics.">GET - Get robots handled by FIROS with their corresponding topics.</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_get-robot-name" title = "Resource Get Robot Name">Resource Get Robot Name</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_get-the-data-published-by-the-robot-on-context-broker.." title ="GET - Get the data published by the robot on Context Broker..">GET - Get the data published by the robot on Context Broker..</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_connect-robot" title = "Resource Connect Robot">Resource Connect Robot</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_search-for-robots-and-connect-them" title ="POST - Search for robots and connect them">POST - Search for robots and connect them</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_disconnect-robot" title = "Resource Disconnect Robot">Resource Disconnect Robot</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_disconnect-robot-which-name-matches-with-the-one-used" title ="POST - Disconnect robot which name matches with the one used">POST - Disconnect robot which name matches with the one used</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_write-whitelist" title = "Resource Write whitelist">Resource Write whitelist</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_search-for-robots-and-connect-them" title ="POST - Search for robots and connect them">POST - Search for robots and connect them</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_remove-from-whitelist" title = "Resource Remove from whitelist">Resource Remove from whitelist</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_remove-elements-from-whitelist" title ="POST - Remove elements from whitelist">POST - Remove elements from whitelist</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                                
+                                    <li>
+                                        <a href="#resource_whitelist-restore" title = "Resource Whitelist Restore">Resource Whitelist Restore</a>
+                                        <ul class="toc  ">
+                                        
+                                            
+                                                <li><a href="#action_restore-the-whitelist" title ="POST - Restore the whitelist">POST - Restore the whitelist</a></li>
+                                            
+
+                                        
+                                        </ul>
+                                    </li>
+                                
+                              
+                            </ul>
+                        </li>
+                      
+    <li><a href="#examples">Examples</a></li>
+    </ul>
+</li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <li><a href="#references">References</a></li>
+    
+   </ul>
+</section>
+
+  </div>
+  <div id="API-content">
+  
+	
+
+	
+		<h1>FIROS Config API Specification </h1>
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+		<span class="dateLabel">DATE:</span> <span class="dateValue"> 4 September 2015 </span>
+	
+
+	
+
+	
+
+	
+
+
+
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+		<h2 id="editors">Editors</h2>
+		<p>+Íñigo González, Etxe-Tar
++Ángel Hernández, Etxe-Tar
++Fernánde Herranz, Etxe-TAr
++José Jaime, Etxe-Tar</p>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+		<h2 id="copyright">Copyright</h2>
+		<p>MIT License</p>
+<p>Copyright (c) &lt;2015&gt; <Ikergune, Etxetar></p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+	
+
+	
+
+
+<hr>
+
+
+	<h2 id="abstract">Abstract</h2>
+	<p>This specification defines the FIROS Config version 1 API. FIROS Config API v1 is intended to manage the whitelists, robots connection/disconnections and robots listings in FIROS.</p>
+<p>FIROS is a tool that helps connecting robots to the cloud. For this purpose it uses the Robot Operating System (ROS, http://www.ros.org/) and the FIWARE Context Broker (http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) as a way to publish and listen robot's data.</p>
+
+
+
+
+	
+
+	
+
+	
+		<h2 id="status">Status of this document</h2>
+		<p>This is a work in progress and is changing on a daily basis. First major release 4 will be released by the end of September 2015</p>
+<p>This specification is licensed under the <a href="http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29">FIWARE Open Specification License</a>.</p>
+	
+
+<hr>
+
+    
+    
+
+
+
+
+		
+	
+	
+		
+	
+		
+	
+		
+	
+
+
+
+
+
+	
+		
+	
+		
+	
+		
+	
+
+
+
+    
+
+  
+  <section id="API_specification">
+      <h1>API Specification</h1>
+      
+
+
+
+
+        
+            <section id="default_group" class="resourceGroup">
+             <div class= "header" ><h2 id="h-default_group"> Default </h2></div>
+        
+	
+        
+            <section id="resource_get-robots" class="resource">
+                 <div class= "header" ><h3 id="h-resource_get-robots">Get Robots [/robots]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_get-robots-handled-by-firos-with-their-corresponding-topics." class="action GET">
+                        
+
+                        
+    <h4 id="h-action_get-robots-handled-by-firos-with-their-corresponding-topics.">
+        Get robots handled by FIROS with their corresponding topics. -
+        GET
+        
+            /robots
+        
+    </h4>
+
+        
+                            <div id="get-robots-handled-by-firos-with-their-corresponding-topics._body" class="">
+                                
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_get-robots-handled-by-firos-with-their-corresponding-topics._examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/get-robots/get-robots-handled-by-firos-with-their-corresponding-topics.">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_get-robot-name" class="resource">
+                 <div class= "header" ><h3 id="h-resource_get-robot-name">Get Robot Name [/robot/{robot_name}]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_get-the-data-published-by-the-robot-on-context-broker.." class="action GET">
+                        
+
+                        
+    <h4 id="h-action_get-the-data-published-by-the-robot-on-context-broker..">
+        Get the data published by the robot on Context Broker.. -
+        GET
+        
+            /robot/{robot_name}
+        
+    </h4>
+
+        
+                            <div id="get-the-data-published-by-the-robot-on-context-broker.._body" class="">
+                                
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_get-the-data-published-by-the-robot-on-context-broker.._examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/get-robot-name/get-the-data-published-by-the-robot-on-context-broker..">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_connect-robot" class="resource">
+                 <div class= "header" ><h3 id="h-resource_connect-robot">Connect Robot [/robot/connect]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_search-for-robots-and-connect-them" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_search-for-robots-and-connect-them">
+        Search for robots and connect them -
+        POST
+        
+            /robot/connect
+        
+    </h4>
+
+        
+                            <div id="search-for-robots-and-connect-them_body" class="">
+                                <p>This API makes FIROS connecting to new robots in case their names and topics match the ones allowed on the whitelist.json</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_search-for-robots-and-connect-them_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/connect-robot/search-for-robots-and-connect-them">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_disconnect-robot" class="resource">
+                 <div class= "header" ><h3 id="h-resource_disconnect-robot">Disconnect Robot [/robot/disconnect/{robot_name}]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_disconnect-robot-which-name-matches-with-the-one-used" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_disconnect-robot-which-name-matches-with-the-one-used">
+        Disconnect robot which name matches with the one used -
+        POST
+        
+            /robot/disconnect/{robot_name}
+        
+    </h4>
+
+        
+                            <div id="disconnect-robot-which-name-matches-with-the-one-used_body" class="">
+                                <p>This API forces FIROS to disconnect from the robot specified by the NAME parameter. It will also delete any connection and entity associated to the particular robot on the Context Broker.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_disconnect-robot-which-name-matches-with-the-one-used_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/disconnect-robot/disconnect-robot-which-name-matches-with-the-one-used">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_write-whitelist" class="resource">
+                 <div class= "header" ><h3 id="h-resource_write-whitelist">Write whitelist [/whitelist/write]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_search-for-robots-and-connect-them" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_search-for-robots-and-connect-them">
+        Search for robots and connect them -
+        POST
+        
+            /whitelist/write
+        
+    </h4>
+
+        
+                            <div id="search-for-robots-and-connect-them_body" class="">
+                                <p>This API overwrites or creates entries in the robot whitelist.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_search-for-robots-and-connect-them_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/write-whitelist/search-for-robots-and-connect-them">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_remove-from-whitelist" class="resource">
+                 <div class= "header" ><h3 id="h-resource_remove-from-whitelist">Remove from whitelist [/whitelist/remove]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_remove-elements-from-whitelist" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_remove-elements-from-whitelist">
+        Remove elements from whitelist -
+        POST
+        
+            /whitelist/remove
+        
+    </h4>
+
+        
+                            <div id="remove-elements-from-whitelist_body" class="">
+                                <p>This API removes elements from the whitelist.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+                                            
+                                            
+                                            
+                                            
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_remove-elements-from-whitelist_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/remove-from-whitelist/remove-elements-from-whitelist">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+            <section id="resource_whitelist-restore" class="resource">
+                 <div class= "header" ><h3 id="h-resource_whitelist-restore">Whitelist Restore [/whitelist/restore]</h3> </div>
+                
+                
+                
+
+		        
+                
+                
+
+
+
+
+
+
+    
+
+
+                
+
+
+                    
+                        
+                            <div id="action_restore-the-whitelist" class="action POST">
+                        
+
+                        
+    <h4 id="h-action_restore-the-whitelist">
+        Restore the whitelist -
+        POST
+        
+            /whitelist/restore
+        
+    </h4>
+
+        
+                            <div id="restore-the-whitelist_body" class="">
+                                <p>This API restores the whitelist file to its initial state.</p>
+                                
+                                
+                                
+			
+                                
+                                
+      
+                                    
+        	                            
+    
+        	                            
+        		                            
+                                        
+                                        
+                                        
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+     
+</div>
+        	                            
+                                    
+                                    
+                                    <div class="goExample">
+                                        <a href="#action_restore-the-whitelist_examples">Go to example</a>
+                                    </div>
+                                    
+                                        
+    <div class="goApiary">
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a target="_blank" href="http://docs.firos.apiary.io/#reference/default/whitelist-restore/restore-the-whitelist">View in Apiary</a>
+            
+        
+    
+    </div>
+
+                                    
+                                
+                            </div>
+                        </div>
+                    
+            </section>
+        
+    </section>
+
+<section id="examples">
+    <div class= "header" ><h2>Examples</h2> </div>
+    
+        
+            <section id="resource_group__example" class="resourceGroupExample">
+                <div class= "header" ><h3 id="h-resource_group__example">Default</h3> </div>
+        
+
+                
+                    <section id="resource_get-robots_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_get-robots_example">Get Robots [/robots]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_get-robots-handled-by-firos-with-their-corresponding-topics._examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_get-robots-handled-by-firos-with-their-corresponding-topics._examples">
+        Get robots handled by FIROS with their corresponding topics. -
+        GET
+        
+            /robots
+        
+    </h4>
+
+                
+                                    <div id="action_get-robots-handled-by-firos-with-their-corresponding-topics._body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_get-robots-handled-by-firos-with-their-corresponding-topics._Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>[
+    {
+        "name": "turtle1",
+        "topics": [
+            {
+                "type": "turtlesim.msg.Pose",
+                "name": "pose",
+                "structure": {
+                    "y": "float32",
+                    "x": "float32",
+                    "linear_velocity": "float32",
+                    "angular_velocity": "float32",
+                    "theta": "float32"
+                },
+                "pubsub": "subscriber"
+            },
+            {
+                "type": "geometry_msgs.msg.Twist",
+                "name": "cmd_vel",
+                "structure": {
+                    "linear": {
+                        "y": "float64",
+                        "x": "float64",
+                        "z": "float64"
+                    },
+                    "angular": {
+                        "y": "float64",
+                        "x": "float64",
+                        "z": "float64"
+                    }
+                },
+                "pubsub": "publisher"
+            }
+        ],
+    }
+]
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_get-robots-handled-by-firos-with-their-corresponding-topics.">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_get-robot-name_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_get-robot-name_example">Get Robot Name [/robot/{robot_name}]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_get-the-data-published-by-the-robot-on-context-broker.._examples" class="actionExample GET">
+
+                                    
+    <h4 id="h-action_get-the-data-published-by-the-robot-on-context-broker.._examples">
+        Get the data published by the robot on Context Broker.. -
+        GET
+        
+            /robot/{robot_name}
+        
+    </h4>
+
+                
+                                    <div id="action_get-the-data-published-by-the-robot-on-context-broker.._body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_get-the-data-published-by-the-robot-on-context-broker.._Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>[
+    {
+        "id": "turtle1",
+        "type": "ROBOT",
+        "attributes": [
+            {
+                "type": "COMMAND",
+                "name": "COMMAND",
+                "value": [
+                    "pose"
+                ]
+            },
+            {
+                "type": "DescriptionData",
+                "name": "descriptions",
+                "value": "http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch||http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes"
+            },
+            {
+                "type": "turtlesim.msg.Pose",
+                "name": "pose",
+                "value": {
+                    "FIROSstamp": 1424423606.27683,
+                    "linear_velocity": 0,
+                    "theta": 0,
+                    "y": 5.544444561004639,
+                    "x": 5.885244369506836,
+                    "angular_velocity": 0
+                }
+            },
+            {
+                "type": "geometry_msgs.msg.Twist",
+                "name": "cmd_vel",
+                "value": {
+                    "FIROSstamp": 1424423604309,
+                    "linear": {
+                        "y": 0,
+                        "x": 0,
+                        "z": 0
+                    },
+                    "angular": {
+                        "y": 0,
+                        "x": 0,
+                        "z": 0
+                    }
+                }
+            }
+        ]
+    }
+]
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_get-the-data-published-by-the-robot-on-context-broker..">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_connect-robot_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_connect-robot_example">Connect Robot [/robot/connect]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_search-for-robots-and-connect-them_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_search-for-robots-and-connect-them_examples">
+        Search for robots and connect them -
+        POST
+        
+            /robot/connect
+        
+    </h4>
+
+                
+                                    <div id="action_search-for-robots-and-connect-them_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_search-for-robots-and-connect-them_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_search-for-robots-and-connect-them">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_disconnect-robot_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_disconnect-robot_example">Disconnect Robot [/robot/disconnect/{robot_name}]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_disconnect-robot-which-name-matches-with-the-one-used_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_disconnect-robot-which-name-matches-with-the-one-used_examples">
+        Disconnect robot which name matches with the one used -
+        POST
+        
+            /robot/disconnect/{robot_name}
+        
+    </h4>
+
+                
+                                    <div id="action_disconnect-robot-which-name-matches-with-the-one-used_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_disconnect-robot-which-name-matches-with-the-one-used_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_disconnect-robot-which-name-matches-with-the-one-used">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_write-whitelist_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_write-whitelist_example">Write whitelist [/whitelist/write]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_search-for-robots-and-connect-them_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_search-for-robots-and-connect-them_examples">
+        Search for robots and connect them -
+        POST
+        
+            /whitelist/write
+        
+    </h4>
+
+                
+                                    <div id="action_search-for-robots-and-connect-them_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_search-for-robots-and-connect-them_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "turtle\\w+": {
+        "publisher": ["cmd_vel"],
+        "subscriber": ["pose"]
+    },
+    "robot\\w+": {
+        "publisher": ["cmd_vel.*teleop", ".*move_base/goal"],
+        "subscriber": [".*move_base/result"]
+    }
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_search-for-robots-and-connect-them_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_search-for-robots-and-connect-them">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_remove-from-whitelist_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_remove-from-whitelist_example">Remove from whitelist [/whitelist/remove]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_remove-elements-from-whitelist_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_remove-elements-from-whitelist_examples">
+        Remove elements from whitelist -
+        POST
+        
+            /whitelist/remove
+        
+    </h4>
+
+                
+                                    <div id="action_remove-elements-from-whitelist_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                    
+                                                    
+                                                    
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Request </span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_remove-elements-from-whitelist_Request_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{
+    "turtle\\w+": {
+        "publisher": [],
+        "subscriber": ["pose"]
+    },
+    "robot\\w+": {
+        "publisher": ["cmd_vel.*teleop", ".*move_base/goal"],
+        "subscriber": []
+    }
+}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_remove-elements-from-whitelist_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_remove-elements-from-whitelist">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+                    <section id="resource_whitelist-restore_example" class="resourceExample">
+                         <div class= "header" ><h4 id="h-resource_whitelist-restore_example">Whitelist Restore [/whitelist/restore]</h4></div>
+                            
+                            
+                            
+
+                            
+                            
+                            
+
+                            
+
+
+                            
+                                <div id="action_restore-the-whitelist_examples" class="actionExample POST">
+
+                                    
+    <h4 id="h-action_restore-the-whitelist_examples">
+        Restore the whitelist -
+        POST
+        
+            /whitelist/restore
+        
+    </h4>
+
+                
+                                    <div id="action_restore-the-whitelist_body" class=""> 
+                                        
+                                        
+                                        
+                                        
+         
+                                        
+                                            
+                                            
+                                                
+            
+                                                
+                                                    
+                                                
+                                                
+                                                
+
+<div class="rest-packet-div">
+
+            <span class="packetType">Response 200</span> 
+        
+            (application/json)
+        
+    
+            
+            
+            
+            
+
+
+
+ 
+            <div id="action_restore-the-whitelist_Response_1_body" class=" action-div-body">
+                <p></p>
+
+                
+        	         <div class= "header"><p>Headers</p></div>
+                    
+                    
+                        
+                    
+
+        	        <pre><code>Content-Type: application/json</code></pre>
+                
+
+                
+                    <div class= "header"><p>Body</p></div>
+                    <pre><code>{}
+</code></pre>
+                
+
+                
+            </div>
+            
+            
+     
+</div>
+                                                
+                                            
+                                            <div class="goActions">
+                                                <a href="#action_restore-the-whitelist">Go to specification</a>
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                    </section>
+            
+        </section>
+    
+
+
+
+</section>
+  </section>
+  
+   
+
+
+
+	
+
+	
+
+	
+
+    
+    
+    
+      <section id="references">
+      <h1>References</h1>
+          <ul>
+              
+                  <li><a href="http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29">FIWARE Open Specification License</a></li>
+              
+          </ul>
+      </section>
+    
+  </div>
+</div>
+</body>
+</html>
