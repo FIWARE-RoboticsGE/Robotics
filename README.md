@@ -5,6 +5,8 @@
 * [Build and Install](#build-and-install)
 * [Running](#running)
 * [API Reference Documentation](#api-reference-documentation)
+* [Testing](#testing)
+* [Advanced topics](#advanced-topics)
 * [License](#license)
 		  
 ## Introduction
@@ -47,6 +49,8 @@ How to run Robotics can be found at [the Installation and Administration Guide](
 ## Testing
 
 How to run end-to-end tests can be found at [the Installation and Administration Guide](docs/i_and_a_guide.rst#user-content-end-to-end-testing)
+
+[Top](#top)
 
 ## Advanced topics
 
