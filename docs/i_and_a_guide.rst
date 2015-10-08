@@ -509,7 +509,7 @@ In the example below we have a platform with only the master that answers to
 the requests and so it's fully operative. Rcm robots are running only if are
 listed in this response and ``connected`` is true. At the end they are fully
 operative only if ``paired`` is true too. More information about this can be
-found in the User and Programmer Guide under section :ref:`add robot to the platform`
+found in the User and Programmer Guide under section :ref:`add robot to the platform`.
 
 In order to test if firos is publishing into ContextBroker you can run the
 following command:
