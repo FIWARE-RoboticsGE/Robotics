@@ -509,7 +509,7 @@ In the example below we have a platform with only the master that answers to
 the requests and so it's fully operative. Rcm robots are running only if are
 listed in this response and ``connected`` is true. At the end they are fully
 operative only if ``paired`` is true too. More information about this can be
-found in the `User and Programmer Guide <u_and_p_guide#add robot to the platform>`_
+found in the User and Programmer Guide under section :ref:`add robot to the platform`
 
 In order to test if firos is publishing into ContextBroker you can run the
 following command:
@@ -735,7 +735,7 @@ Resource consumption
 ====================
 
 The resource consumption depends on how you designed your service logic
-(see the `User and Programmer Guide <u_and_p_guide#Create brains>`_ to learn
+(see the User and Programmer Guide under the section :ref:`Create brains` to learn
 how to do that). If running ``top`` tool you can see that rcmp_n is
 using 50% of CPU certainly there is a problem; usually 5% is much when
 it isn't starting robots, but launching a service logic during the robot
