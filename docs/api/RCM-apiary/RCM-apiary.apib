@@ -1,0 +1,405 @@
+FORMAT: 1A
+TITLE: Robotics Data API v1 Specification
+DATE: 30 July 2015
+VERSION: v1
+APIARY_PROJECT: test_rdapi_01
+
+
+
+# Robotics Data API (RDAPI) v1 Specification
+
+RDAPI is a set of REST APIs (which return JSON responses) allowing FIWARE developers to integrate robotic services to IoT ones in a simple way.
+
+
+## Editors
+
+  + Davide Colombatto, Telecom Italia
+  + Roberto Antonini, Telecom Italia
+  + Fabio Giuseppe Di Benedetto, Consoft Sistemi
+  
+## Acknowledgements
+
+The editors would like to express their gratitude to the following people who actively contributed to this specification:
+Gianmario Bollano, Pierangelo Garino
+
+## Status
+
+This is a work in progress and is changing on a daily basis. 
+First major release 4 will be released by the end of September 2015 
+
+This specification is licensed under the [FIWARE Open Specification License](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_%28essential_patents_license%29).
+
+## Copyright
+
+Copyright © 2015 by Telecom Italia, Consoft Sistemi
+
+# Specification
+
+## Introduction
+The resources abstracted by RDAPI and needed by FIWARE are described below.
+
+
+## Group Service Logics
+
+A service logic identifies the set of ROS functions (i.e. ROS nodes and/or launchers) needed to perform a specific service, like e.g. "assisted teleoperation" or "path planning".
+For each ROS function is also indicated where it has to be started (Server o Robot side).
+
+## Read service logics [/service_logic/read]
+Returns the list of provisioned service logics.
+
+The following is the response structure:
++ __result__: *OK* if the requested information can be returned, otherwise *ERROR* with motivation in the reason field.
++ __reason__: if result is *OK* - an array of provisioned service logics, for each element:
+    + __slg_name__: name of the service logic
+
+### Read Service Logics [GET]
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": [
+                {
+                    "slg_name": "service_logic1",
+                },
+                {
+                    "slg_name": "service_logic2",
+                }                
+            ]
+        }
+
+## Read service logic information [/service_logic/read?slg_name={slg_name_value}]
+
+Returns the list of ROS nodes and/or launchers associated to the service logic.
+
+The following is the response structure:
++ __result__: *OK* if response can be returned, otherwise *ERROR* with motivation in the reason field.
++ __reason__: if result is *OK* - an object containing:
+    + __ss_side__: the side of the head of the Service Space to create (S: Server-side, R: Robot-side)
+    + __sn_list__: list of ROS nodes to start, for each element:
+        + __sn_package__: the ROS node package
+        + __sn_type__: the ROS node type
+        + __sn_side__: the side where to start the ROS node (S: Server-side, R: Robot-side)
+        + __sn_name__: the name to use to start the ROS node
+        + __sn_params__: the ROS node parameters
+    + __sl_list__: list of ROS launchers to start, for each element:
+        + __sl_package__: the ROS launcher package
+        + __sl_file_launcher__: the ROS launcher file
+        + __sl_side__: the side where to start the ROS launcher (S: Server-side, R: Robot-side)
+        + __sl_name__: the name to use to start the ROS launcher
+        + __sl_params__: the ROS launcher parameters  
+
+### Read Service Logic Information [GET]
+
+This action allows you to read the indicated service logic information.
+
++ Parameters
+    + slg_name_value: service_logic1
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": {
+                "ss_side": "S",
+                "sn_list":
+                    [
+                        {
+                            "sn_package": "node1_pkg",
+                            "sn_type": "node1_type",
+                            "sn_side": "S",
+                            "sn_name": "node1_name",
+                            "sn_params": "node1_params"
+                        },
+                        ...,
+                        {
+                            "sn_package": "driver1_pkg",
+                            "sn_type": "driver1_type",
+                            "sn_side": "R",
+                            "sn_name": "driver1_name",
+                            "sn_params": "driver1_params"
+                        }
+                    ],
+                "sl_list":
+                    [
+                        {
+                            "sl_package": "launcher1_pkg",
+                            "sl_file_launcher": "launcher1_file",
+                            "sl_side": "S",
+                            "sl_name": "launcher1_name",
+                            "sl_params": "launcher1_params"
+                        }
+                    ]
+            }
+        }
+
+## Provisioning a service logic [/service_logic/provisioning]
+
+Before using a service logic, it has to be inserted into the platform by using the provisioning API.
+
+The following is the request structure:
++ __slg_name__: name of the service logic to provide
++ __sn_list__: list of ROS nodes to start, for each element:
+    + __sn_package__: the ROS node package
+    + __sn_type__: the ROS node type
+    + __sn_name__: the name to use to start the ROS node
+    + __sn_params__: the ROS node parameters
+    + __sn_side__: the side where to start the ROS node (S: Server-side, R: Robot-side)
++ __sl_list__: list of ROS launchers to start, for each element:
+    + __sl_package__: the ROS launcher package
+    + __sl_file_launcher__: the ROS launcher file
+    + __sl_name__: the name to use to start the ROS launcher
+    + __sl_params__: the ROS launcher parameters
+    + __sl_side__: the side where to start the ROS launcher (S: Server-side, R: Robot-side)
+
+The following is the response structure:
++ __result__: *OK* if the requested action can be executed, otherwise *ERROR* with motivation in the reason field.
++ __reason__: additional information
+
+### Provisioning a service logic [POST]
+
+You may provide your own service logic into platform using this action. It takes a JSON
+object containing the unique name of the service logic and two list related to the ROS nodes and ROS launchers associated to the service logic.
+
++ Request (application/json)
+
+        {
+            "slg_name": "service_logic1",
+            "sn_list":
+                [
+                    {
+                        "sn_package": "node1_pkg",
+                        "sn_type": "node1_type",
+                        "sn_name": "node1_name",
+                        "sn_params": "node1_params",
+                        "sn_side": "S"
+                    },
+                    ...,
+                    {
+                        "sn_package": "driver1_pkg",
+                        "sn_type": "driver1_type",
+                        "sn_name": "driver1_name",
+                        "sn_params": "driver1_params",
+                        "sn_side": "R"
+                    }
+                ],
+            "sl_list":
+                [
+                    {
+                        "sl_package": "launcher1_pkg",
+                        "sl_file_launcher": "launcher1_file",
+                        "sl_name": "launcher1_name",
+                        "sl_params": "launcher1_params",
+                        "sl_side": "S"
+                    }
+                ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": "The service logic with name 'service_logic1' has been provisioned correctly"
+        }
+
+## Unprovisioning a service logic [/service_logic/r_provisioning]
+
+If a service logic is no longer used, it can be deleted from platform by using the rollback provisioning API.
+
+The following is the request structure:
++ __slg_name__: name of the service logic to unprovide
+
+The following is the response structure:
++ __result__: *OK* if the requested action can be executed, otherwise *ERROR* with motivation in the reason field.
++ __reason__: additional information
+
+### Rollback Provisioning a service logic [POST]
+
+You may remove your own service logic from platform using this action. It takes a JSON
+object containing the unique name of the service logic.
+
++ Request (application/json)
+
+        {
+            "slg_name": "service_logic1",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK"
+            "reason": "The provisioning of the service logic with name 'service_logic1' has been rolled back completely",
+        }
+
+
+## Group Platform Instances
+
+The MASTER instance and the set of Robot instances provisioned in the platform.
+
+## Read robot instances [/platform_instance/read]
+
+Returns the list of provisioned Robot instances.
+
+The following is the response structure:
++ __result__: *OK* if the requested information can be returned, otherwise *ERROR* with motivation in the reason field.
++ __reason__: if result is *OK* - an array of provisioned Robot instances, for each element:
+    + __pi_name__: name of the Robot instance
+    + __service_logic__: name of the service logic associated with the robot
+    + __connected__: *true* if the robot is connected to the platform, *false* otherwise
+    + __paired__: *true* if the robot is associated to a server (MASTER) and the related service logic is started, *false* otherwise
+
+### Read Robot Instances [GET]
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": [
+                {
+                    "pi_name": "robot1",
+                    "service_logic": "service_logic1",
+                    "connected": true,
+                    "paired": true
+                }
+            ]
+        }
+
+## Provisioning a robot [/platform_instance/provisioning]
+
+Before using a robot, the related Robot instance has to be inserted into the platform by using the provisioning API.
+
+The following is the request structure:
++ __pi_name__: name of the Robot instance to provide
++ __pi_service_logic__: name of the service logic to associate with the robot
+
+The following is the response structure:
++ __result__: *OK* if the requested action can be executed, otherwise *ERROR* with motivation in the reason field.
++ __reason__: additional information
+
+### Provisioning a Robot [POST]
+
+You may provide your own robot into platform using this action. It takes a JSON
+object containing the unique name of the Robot instance and the name of the associated service logic.
+
++ Request (application/json)
+
+        {
+            "pi_name": "robot1",
+            "pi_service_logic": "service_logic1"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": "The platform node instance with name 'robot1' has been provisioned correctly"
+        }
+
+
+## Unprovisioning a robot [/platform_instance/r_provisioning]
+
+If a robot is no longer used, the related Robot instance can be deleted from platform by using the rollback provisioning API.
+
+The following is the request structure:
++ __pi_name__: name of the Robot instance to unprovide
+
+The following is the response structure:
++ __result__: *OK* if the requested action can be executed, otherwise *ERROR* with motivation in the reason field.
++ __reason__: additional information
+
+### Rollback Provisioning a robot [POST]
+
+You may remove your own robot from platform using this action. It takes a JSON
+object containing the unique name of the robot instance.
+
++ Request (application/json)
+
+        {
+            "pi_name": "robot1",
+        }
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK"
+            "reason": "The provisioning of the platform node instance with name 'robot1' has been rolled back completely",
+        }
+
+## Group Service Spaces
+
+A Service Space (also called "Robot Clone") is a ROS container hosting the service logic associated to a provisioned Robot instance.
+
+It has a unique name within the platform (i.e. the same name of the managed robot) and traverses two platform instances:
+  - Server-side (i.e. the "remote brain"), which is the MASTER instance
+  - Robot-side (i.e. the "local brain"), which is a Robot instance: a real robot, a simulated robot or a gateway which manages a real robot 
+ 
+Each Service Space is: 
+ - Automatically created by the platform when the related robot connects to it and automatically deleted when the robot disconnects to it.
+ - After the creation, the service logic associated to the related robot is started and it is stopped before the deletion
+
+## Read service space [/service_space/read?ss_name={ss_name_value}]
+
+Returns the list of ROS nodes and/or launchers that are started in the Service Space and information related to FIROS to be reachable by the Context Broker.
+
+The following is the response structure:
++ __result__: *OK* if response can be returned, otherwise *ERROR* with motivation in the reason field.
++ __reason__: if result is *OK* - an object containing:
+    + __r_nodes__: list of ROS nodes started, for each element:
+        + __sn_package__: the ROS node package
+        + __sn_type__: the ROS node type
+        + __sn_name__: the ROS node name
+        + __i_name__: the instance's name where the ROS node is started
+    + __r_launchers__: list of ROS launchers started, for each element:
+        + __sl_package__: the ROS launcher package
+        + __sl_file_launcher__: the ROS launcher file
+        + __sl_name__: the ROS launcher name
+        + __associated_r_nodes__: the array of ROS nodes belonging to the launcher
+        + __i_name__: the instance's name where the ROS launcher is started     
+    + __public_ip__: the public IP of the MASTER
+    + __inbound_port__: the inbound port which will be used by the Context Broker 
+
+
+### Read Service Space [GET]
+
+This action allows you to read the indicated Service Space.
+
++ Parameters
+    + ss_name_value: robot1
+
++ Response 200 (application/json)
+
+        {
+            "result": "OK",
+            "reason": {
+                "r_nodes":
+                    [
+                        {
+                            "sn_package": "node1_pkg",
+                            "sn_type": "node1_type",
+                            "sn_name": "node1_name",
+                            "i_name": "master"
+                        },
+                        ...,
+                        {
+                            "sn_package": "driver1_pkg",
+                            "sn_type": "driver1_type",
+                            "sn_name": "driver1_name",
+                            "i_name": "robot1"
+                        }
+                    ],
+                "r_launchers":
+                    [
+                        {
+                            "sl_package": "launcher1_pkg",
+                            "sl_file_launcher": "launcher1_file",
+                            "sl_name": "launcher1_name", 
+                            "associated_r_nodes": ["node1", ..., "nodeN"],
+                            "i_name": "master"
+                        }
+                    ],
+                "inbound_port": "10100",
+                "public_ip": "..."
+            }
+        }
+
+
