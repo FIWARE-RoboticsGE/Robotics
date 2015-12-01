@@ -1,0 +1,194 @@
+FORMAT: 1A
+
+# firos
+
+FIROS is a tool that helps connecting robots to the cloud. For this purpose it uses the Robot Operating System (ROS, http://www.ros.org/) and the FIWARE Context Broker (http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) as a way to publish and listen robot's data.
+
+## Get Robots [/robots]
+
+### Get robots handled by FIROS with their corresponding topics. [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "name": "turtle1",
+                "topics": [
+                    {
+                        "type": "turtlesim.msg.Pose",
+                        "name": "pose",
+                        "structure": {
+                            "y": "float32",
+                            "x": "float32",
+                            "linear_velocity": "float32",
+                            "angular_velocity": "float32",
+                            "theta": "float32"
+                        },
+                        "pubsub": "subscriber"
+                    },
+                    {
+                        "type": "geometry_msgs.msg.Twist",
+                        "name": "cmd_vel",
+                        "structure": {
+                            "linear": {
+                                "y": "float64",
+                                "x": "float64",
+                                "z": "float64"
+                            },
+                            "angular": {
+                                "y": "float64",
+                                "x": "float64",
+                                "z": "float64"
+                            }
+                        },
+                        "pubsub": "publisher"
+                    }
+                ],
+            }
+        ]
+
+
+## Get Robot Name [/robot/{robot_name}]
+
+### Get the data published by the robot on Context Broker.. [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": "turtle1",
+                "type": "ROBOT",
+                "attributes": [
+                    {
+                        "type": "COMMAND",
+                        "name": "COMMAND",
+                        "value": [
+                            "pose"
+                        ]
+                    },
+                    {
+                        "type": "DescriptionData",
+                        "name": "descriptions",
+                        "value": "http://wiki.ros.org/ROS/Tutorials/UsingRxconsoleRoslaunch||http://wiki.ros.org/ROS/Tutorials/UnderstandingNodes"
+                    },
+                    {
+                        "type": "turtlesim.msg.Pose",
+                        "name": "pose",
+                        "value": {
+                            "FIROSstamp": 1424423606.27683,
+                            "linear_velocity": 0,
+                            "theta": 0,
+                            "y": 5.544444561004639,
+                            "x": 5.885244369506836,
+                            "angular_velocity": 0
+                        }
+                    },
+                    {
+                        "type": "geometry_msgs.msg.Twist",
+                        "name": "cmd_vel",
+                        "value": {
+                            "FIROSstamp": 1424423604309,
+                            "linear": {
+                                "y": 0,
+                                "x": 0,
+                                "z": 0
+                            },
+                            "angular": {
+                                "y": 0,
+                                "x": 0,
+                                "z": 0
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+
+
+## Connect Robot [/robot/connect]
+
+### Search for robots and connect them [POST]
+
+This API makes FIROS connecting to new robots in case their names and topics match the ones allowed on the whitelist.json
+
++ Response 200 (application/json)
+
+    + Body
+
+            {}
+
+## Disconnect Robot [/robot/disconnect/{robot_name}]
+
+### Disconnect robot which name matches with the one used [POST]
+
+This API forces FIROS to disconnect from the robot specified by the NAME parameter. It will also delete any connection and entity associated to the particular robot on the Context Broker.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {}
+
+## Write whitelist [/whitelist/write]
+
+### Search for robots and connect them [POST]
+
+This API overwrites or creates entries in the robot whitelist.
+
++ Request (application/json)
+
+        {
+            "turtle\\w+": {
+                "publisher": ["cmd_vel"],
+                "subscriber": ["pose"]
+            },
+            "robot\\w+": {
+                "publisher": ["cmd_vel.*teleop", ".*move_base/goal"],
+                "subscriber": [".*move_base/result"]
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {}
+
+
+## Remove from whitelist [/whitelist/remove]
+
+### Remove elements from whitelist [POST]
+
+This API removes elements from the whitelist.
+
++ Request (application/json)
+
+        {
+            "turtle\\w+": {
+                "publisher": [],
+                "subscriber": ["pose"]
+            },
+            "robot\\w+": {
+                "publisher": ["cmd_vel.*teleop", ".*move_base/goal"],
+                "subscriber": []
+            }
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {}
+
+
+## Whitelist Restore [/whitelist/restore]
+
+### Restore the whitelist [POST]
+
+This API restores the whitelist file to its initial state.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {}
