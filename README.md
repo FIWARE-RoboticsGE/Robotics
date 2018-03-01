@@ -1,4 +1,5 @@
-#<a name="top"></a>Robotics
+<a name="top"></a>
+# Robotics
 
 * [Introduction](#introduction)
 * [GEi overall description](#gei-overall-description)
